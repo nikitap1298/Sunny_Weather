@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "jacket_warm.png",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

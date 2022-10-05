@@ -1,0 +1,23 @@
+{
+  "images" : [
+    {
+      "filename" : "Simulator Screen Shot - iPhone 13 Pro - 2022-09-18 at 19.27.29_iphone13prosierrablue_portrait.png",
+      "idiom" : "universal",
+      "scale" : "1x"
+    },
+    {
+      "filename" : "Simulator Screen Shot - iPhone 13 Pro - 2022-09-18 at 19.27.29_iphone13prosierrablue_portrait@2x.png",
+      "idiom" : "universal",
+      "scale" : "2x"
+    },
+    {
+      "filename" : "Simulator Screen Shot - iPhone 13 Pro - 2022-09-18 at 19.27.29_iphone13prosierrablue_portrait@3x.png",
+      "idiom" : "universal",
+      "scale" : "3x"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}
