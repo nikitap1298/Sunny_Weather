@@ -133,7 +133,7 @@ class CustomSearchCollectionViewCell: SwipeCollectionViewCell {
         firstStackView.translateMask()
         secondStackView.translateMask()
         
-        mainView.backgroundColor = CustomColors.colorVanilla
+//        mainView.backgroundColor = CustomColors.colorBlue
         mainView.addCornerRadius()
         
         firstStackView.axis = .vertical
@@ -169,11 +169,11 @@ class CustomSearchCollectionViewCell: SwipeCollectionViewCell {
         descriptionLabel.translateMask()
         
         cityLabel.textAlignment = .left
-        cityLabel.textColor = CustomColors.colorGray
+        cityLabel.textColor = CustomColors.colorVanilla
         cityLabel.font = UIFont(name: CustomFonts.loraSemiBold, size: 20)
         
         descriptionLabel.textAlignment = .left
-        descriptionLabel.textColor = CustomColors.colorGray
+        descriptionLabel.textColor = CustomColors.colorVanilla
         descriptionLabel.font = UIFont(name: CustomFonts.loraMedium, size: 16)
         
         firstStackView.addArrangedSubview(cityLabel)
@@ -185,7 +185,7 @@ class CustomSearchCollectionViewCell: SwipeCollectionViewCell {
         conditionImage.translateMask()
         
         temperatureLabel.textAlignment = .center
-        temperatureLabel.textColor = CustomColors.colorGray
+        temperatureLabel.textColor = CustomColors.colorVanilla
         temperatureLabel.font = UIFont(name: CustomFonts.loraSemiBold, size: 20)
         
         conditionImage.contentMode = .scaleAspectFit

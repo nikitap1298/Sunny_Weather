@@ -65,7 +65,7 @@ class SearchVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.backgroundColor = CustomColors.colorLightGreen
+        view.backgroundColor = SearchColors.background
         customNavigationBar()
         setUpSwipeGestureRecognizer()
         
@@ -168,7 +168,6 @@ class SearchVC: UIViewController {
                 return
             }
             self?.textViewBottomAnchor?.constant = -(keyBoardSize.height + 10.0 )
-            self?.backButton.tintColor = CustomColors.colorVanilla
             self?.navigationController?.setNavigationBarHidden(true, animated: true)
             
             UIView.animate(withDuration: 0) {
@@ -183,7 +182,6 @@ class SearchVC: UIViewController {
         NotificationCenter.default.addObserver(forName: hideNotification, object: nil, queue: .main) { [weak self] _ in
             self?.view.removeBlur()
             self?.textViewBottomAnchor?.constant = -(self?.offSetValue ?? 20.0)
-            self?.backButton.tintColor = CustomColors.colorGray
             self?.navigationController?.setNavigationBarHidden(false, animated: true)
             
             self?.autoCompleteTableView.tableView.removeFromSuperview()
@@ -209,7 +207,6 @@ extension SearchVC: UISearchTextFieldDelegate {
     }
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
-        textView.cancelButton.setTitleColor(CustomColors.colorVanilla, for: .normal)
         switch traitCollection.userInterfaceStyle {
         case .light:
             view.addBlurView(style: .systemUltraThinMaterialDark)
@@ -221,7 +218,6 @@ extension SearchVC: UISearchTextFieldDelegate {
     
     func textFieldDidEndEditing(_ textField: UITextField, reason: UITextField.DidEndEditingReason) {
         textView.searchTextField.text = ""
-        textView.cancelButton.setTitleColor(CustomColors.colorGray, for: .normal)
         view.removeBlur()
         cityAutoComplete.placeArray.removeAll()
         autoCompleteTableView.tableView.reloadData()
@@ -287,11 +283,33 @@ extension SearchVC: UICollectionViewDelegate, UICollectionViewDataSource {
         guard let cell = searchCollectionView.collectionView.dequeueReusableCell(withReuseIdentifier: CustomSearchCollectionViewCell.reuseIdentifier, for: indexPath) as? CustomSearchCollectionViewCell else {
             return UICollectionViewCell()
         }
+        let startPoint = CGPoint(x: 0.0, y: 0.0)
+        let endPoint = CGPoint(x: 1.0, y: 0.9)
+        
+        DispatchQueue.main.async { [weak self] in
+            switch self?.traitCollection.userInterfaceStyle {
+            case .light, .unspecified:
+                cell.mainView.addGradient(SearchColors.collectionTop,
+                                          SearchColors.collectionBottom,
+                                          startPoint,
+                                          endPoint)
+            case .dark:
+                cell.mainView.addGradient(SearchColors.collectionTop,
+                                          SearchColors.collectionBottom1,
+                                          startPoint,
+                                          endPoint)
+            case .none:
+                break
+            case .some(_):
+                break
+            }
+        }
+        
         cell.delegate = self
-        cell.setUpCity(cityArray[indexPath.row].name)
-        cell.setUpDescription(cityArray[indexPath.row].conditionDescription)
-        cell.setUpTemperature(cityArray[indexPath.row].temperature)
-        cell.setUpConditionImage(cityArray[indexPath.row].conditionImage)
+        cell.setUpCity(self.cityArray[indexPath.row].name)
+        cell.setUpDescription(self.cityArray[indexPath.row].conditionDescription)
+        cell.setUpTemperature(self.cityArray[indexPath.row].temperature)
+        cell.setUpConditionImage(self.cityArray[indexPath.row].conditionImage)
         return cell
     }
     
@@ -399,7 +417,7 @@ private extension SearchVC {
         appearance.backgroundColor = .clear
         navigationItem.title = screenTitle
         appearance.titleTextAttributes = [
-            .foregroundColor: CustomColors.colorGray as Any,
+            .foregroundColor: OtherUIColors.navigationItems as Any,
             .font: UIFont(name: CustomFonts.nunitoBold, size: 26) ?? UIFont.systemFont(ofSize: 26)
         ]
         
@@ -412,7 +430,7 @@ private extension SearchVC {
         // Custom Left Button
         let backButton = UIButton()
         backButton.customNavigationButton(UIImages.backLeft,
-                                          CustomColors.colorGray)
+                                          OtherUIColors.navigationItems)
         let leftButton = UIBarButtonItem(customView: backButton)
         navigationItem.leftBarButtonItem = leftButton
         backButton.addTarget(self, action: #selector(didTapBackButton), for: .touchUpInside)

@@ -28,7 +28,7 @@ class AutoCompleteView: UIView {
         
         tableView.addCornerRadius()
         tableView.rowHeight = 50.0
-        tableView.backgroundColor = CustomColors.colorVanilla
+        tableView.backgroundColor = SearchColors.tableView
         
         NSLayoutConstraint.activate([
             tableView.topAnchor.constraint(equalTo: self.topAnchor),
@@ -49,7 +49,7 @@ class CustomAutoCompleteCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
-        contentView.backgroundColor = CustomColors.colorVanilla
+        contentView.backgroundColor = SearchColors.tableView
         setUpUI()
     }
     
@@ -76,7 +76,7 @@ class CustomAutoCompleteCell: UITableViewCell {
         placeLabel.translateMask()
         
         placeLabel.addCornerRadius()
-        placeLabel.textColor = CustomColors.colorGray
+        placeLabel.textColor = SearchColors.searchTextFieldText
         placeLabel.font = UIFont(name: CustomFonts.loraMedium, size: 16)
         
         NSLayoutConstraint.activate([

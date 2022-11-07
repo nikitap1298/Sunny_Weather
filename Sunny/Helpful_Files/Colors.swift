@@ -21,6 +21,17 @@ struct OnboardingColors {
     static let weatherKitText = UIColor(named: "WeatherKit_Text")
 }
 
+// MARK: - SearchColors
+struct SearchColors {
+    static let background = UIColor(named: "Search_Background")
+    static let collectionBottom1 = UIColor(named: "Search_Collection_Bottom_1")
+    static let collectionBottom = UIColor(named: "Search_Collection_Bottom")
+    static let collectionTop = UIColor(named: "Search_Collection_Top")
+    static let tableView = UIColor(named: "Search_TableView")
+    static let searchTextFieldText = UIColor(named: "Search_TextField_Text")
+    static let searchTextField = UIColor(named: "Search_TextField")
+}
+
 // MARK: - SettingsColors
 struct SettingsColors {
     static let backgroungWhite = UIColor(named: "Background_White")
