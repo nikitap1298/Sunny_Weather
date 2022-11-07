@@ -20,12 +20,22 @@ Requires iOS 14.0 or later<br>
 ### Onboarding Screen
 <div>
   <img src="./ScreenShots/1.png" width=235,75 height=450>
+  <img src="./ScreenShots/10.png" width=235,75 height=450>
+</div>
+<div>
   <img src="./ScreenShots/2.png" width=235,75 height=450>
+  <img src="./ScreenShots/11.png" width=235,75 height=450>
+</div>
+<div>
   <img src="./ScreenShots/3.png" width=235,75 height=450>
+  <img src="./ScreenShots/12.png" width=235,75 height=450>
 </div>
 
 ### Hourly Forecast Screen
-<img src="./ScreenShots/4.png" width=235,75 height=450>
+<div>
+  <img src="./ScreenShots/4.png" width=235,75 height=450>
+  <img src="./ScreenShots/13.png" width=235,75 height=450>
+</div>
 
 ### Search Screen
 <div>
