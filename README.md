@@ -34,3 +34,7 @@ Requires iOS 14.0 or later<br>
 
 ### Appearance Screen
 <img src="./ScreenShots/8.png" width=235,75 height=450>
+
+### About Screen
+<img src="./ScreenShots/9.png" width=235,75 height=450>
+
