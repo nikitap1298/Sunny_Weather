@@ -17,6 +17,10 @@ This is a weather app which is currently WIP.
 Requires iOS 14.0 or later<br>
 
 ## Preview
+
+### Launch Screen
+<img src="./ScreenShots/0.png" width=235,75 height=450>
+
 ### Onboarding Screen
 <div>
   <img src="./ScreenShots/1.png" width=235,75 height=450>
@@ -55,4 +59,10 @@ Requires iOS 14.0 or later<br>
 <div>
   <img src="./ScreenShots/9.png" width=235,75 height=450>
   <img src="./ScreenShots/16.png" width=235,75 height=450>
+</div>
+
+### No Internet Screen
+<div>
+  <img src="./ScreenShots/17.png" width=235,75 height=450>
+  <img src="./ScreenShots/18.png" width=235,75 height=450>
 </div>
