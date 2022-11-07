@@ -47,7 +47,7 @@ struct CurrentWeatherModel {
     var humidity: Double = 0.0
     var precipitationIntensity: Double = 0.0
     var pressure: Double = 0.0
-    var temperature: Double = 0.0
+    var temperature: Double?
     var temperatureApparent: Double = 0.0
     var uvIndex: Int = 0
     var visibility: Double = 0.0
@@ -61,94 +61,98 @@ struct CurrentWeatherModel {
         switch conditionCode {
         case "Clear":
             if daylight {
-                return UIImage(named: WeatherImages.sun)
+                return WeatherImages.sun
             } else {
-                return UIImage(named: WeatherImages.moon_1)
+                return WeatherImages.moon_1
             }
         case "Cloudy":
-            return UIImage(named: WeatherImages.cloudy)
+            return WeatherImages.cloudy
         case "Dust":
-            return UIImage(named: WeatherImages.fog)
+            return WeatherImages.fog
         case "Fog":
-            return UIImage(named: WeatherImages.fog)
+            return WeatherImages.fog
         case "Haze":
-            return UIImage(named: WeatherImages.fog)
+            return WeatherImages.fog
         case "MostlyClear":
             if daylight {
-                return UIImage(named: WeatherImages.sun_Cloud)
+                return WeatherImages.sun_Cloud
             } else {
-                return UIImage(named: WeatherImages.moon_Cloud)
+                return WeatherImages.moon_Cloud
             }
         case "MostlyCloudy":
-            return UIImage(named: WeatherImages.cloudy)
+            return WeatherImages.cloudy
         case "PartlyCloudy":
-            return UIImage(named: WeatherImages.cloudy)
+            if daylight {
+                return WeatherImages.sun_Cloud
+            } else {
+                return WeatherImages.moon_Cloud
+            }
         case "ScatteredThunderstorms":
-            return UIImage(named: WeatherImages.storm_Cloud)
+            return WeatherImages.storm_Cloud
         case "Smoke":
-            return UIImage(named: WeatherImages.fog)
+            return WeatherImages.fog
         case "Breezy":
-            return UIImage(named: WeatherImages.wind)
+            return WeatherImages.wind
         case "Windy":
-            return UIImage(named: WeatherImages.wind)
+            return WeatherImages.wind
         case "Drizzle":
-            return UIImage(named: WeatherImages.rain_Drops)
+            return WeatherImages.rain_Drops
         case "HeavyRain":
-            return UIImage(named: WeatherImages.rain)
+            return WeatherImages.rain
         case "Rain":
-            return UIImage(named: WeatherImages.rain)
+            return WeatherImages.rain
         case "Showers":
-            return UIImage(named: WeatherImages.rain)
+            return WeatherImages.rain
         case "Flurries":
-            return UIImage(named: WeatherImages.rain)
+            return WeatherImages.snow_Cloud_1
         case "HeavySnow":
-            return UIImage(named: WeatherImages.snow_Cloud_1)
+            return WeatherImages.snow_Cloud_1
         case "MixedRainAndSleet":
-            return UIImage(named: WeatherImages.snow_Rain)
+            return WeatherImages.snow_Rain
         case "MixedRainAndSnow":
-            return UIImage(named: WeatherImages.snow_Rain)
+            return WeatherImages.snow_Rain
         case "MixedRainfall":
-            return UIImage(named: WeatherImages.rain)
+            return WeatherImages.rain
         case "MixedSnowAndSleet":
-            return UIImage(named: WeatherImages.snow_Rain)
+            return WeatherImages.snow_Rain
         case "ScatteredShowers":
-            return UIImage(named: WeatherImages.rain)
+            return WeatherImages.rain
         case "ScatteredSnowShowers":
-            return UIImage(named: WeatherImages.snow_Rain)
+            return WeatherImages.snow_Rain
         case "Sleet":
-            return UIImage(named: WeatherImages.rain_Drops)
+            return WeatherImages.rain_Drops
         case "Snow":
-            return UIImage(named: WeatherImages.snow_Cloud)
+            return WeatherImages.snow_Cloud
         case "SnowShowers":
-            return UIImage(named: WeatherImages.snow_Cloud)
+            return WeatherImages.snow_Cloud
         case "Blizzard":
-            return UIImage(named: WeatherImages.snow_Cloud_1)
+            return WeatherImages.snow_Cloud_1
         case "BlowingSnow":
-            return UIImage(named: WeatherImages.snow_Cloud_1)
+            return WeatherImages.snow_Cloud_1
         case "FreezingDrizzle":
-            return UIImage(named: WeatherImages.rain_Drops)
+            return WeatherImages.rain_Drops
         case "FreezingRain":
-            return UIImage(named: WeatherImages.rain_Drops)
+            return WeatherImages.rain_Drops
         case "Frigid":
-            return UIImage(named: WeatherImages.rain_Drops)
+            return WeatherImages.rain_Drops
         case "Hail":
-            return UIImage(named: WeatherImages.snow_Cloud)
+            return WeatherImages.snow_Cloud
         case "Hot":
-            return UIImage(named: WeatherImages.drought_Soil)
+            return WeatherImages.drought_Soil
         case "Hurricane":
-            return UIImage(named: WeatherImages.whirlwind)
+            return WeatherImages.whirlwind
         case "IsolatedThunderstorms":
-            return UIImage(named: WeatherImages.storm_Cloud)
+            return WeatherImages.storm_Cloud
         case "SevereThunderstorm":
-            return UIImage(named: WeatherImages.storm_Cloud_1)
+            return WeatherImages.storm_Cloud_1
         case "Thunderstorm":
-            return UIImage(named: WeatherImages.storm_Cloud_1)
+            return WeatherImages.storm_Cloud_1
         case "Tornado":
-            return UIImage(named: WeatherImages.whirlwind)
+            return WeatherImages.whirlwind
         case "TropicalStorm":
-            return UIImage(named: WeatherImages.rain)
+            return WeatherImages.rain
         default:
-            return UIImage(named: WeatherImages.sun)
+            return WeatherImages.sun
         }
     }
 }

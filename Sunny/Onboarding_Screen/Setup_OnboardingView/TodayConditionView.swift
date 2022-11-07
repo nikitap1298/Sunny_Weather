@@ -6,9 +6,8 @@
 //
 
 import UIKit
-import Charts
 
-// MARK: - TodaysSingleWeatherParameterTemplate
+// MARK: - TodaySingleWeatherParameterTemplate
 class TodaySingleWeatherParameterTemplate: UIView {
     
     let mainView = UIView()
@@ -30,12 +29,6 @@ class TodaySingleWeatherParameterTemplate: UIView {
         super.awakeFromNib()
     }
     
-    override func layoutSubviews() {
-        super.layoutSubviews();
-        self.mainView.layoutIfNeeded()
-//        self.mainView.applyGradient(colours: [.black, .gray])
-    }
-    
     private func setUpUI() {
         self.addSubview(mainView)
         mainView.addSubview(parameterNameLabel)
@@ -48,15 +41,15 @@ class TodaySingleWeatherParameterTemplate: UIView {
         parameterImage.translateMask()
         
 //        mainView.addShadow()
-        mainView.backgroundColor = UIColor(named: CustomColors.colorDarkBlue)
+        mainView.backgroundColor = CustomColors.colorDarkBlue
         mainView.addCornerRadius()
         
         parameterNameLabel.textAlignment = .left
-        parameterNameLabel.textColor = UIColor(named: CustomColors.colorLightGray)
+        parameterNameLabel.textColor = CustomColors.colorLightGray
         parameterNameLabel.font = UIFont(name: CustomFonts.loraMedium, size: 16)
         
         parameterValueLabel.textAlignment = .right
-        parameterValueLabel.textColor = UIColor(named: CustomColors.colorVanilla)
+        parameterValueLabel.textColor = CustomColors.colorVanilla
         parameterValueLabel.font = UIFont(name: CustomFonts.loraSemiBold, size: 16)
         
         parameterImage.contentMode = .scaleAspectFit
@@ -103,7 +96,6 @@ class TodayConditionView: UIView {
     let windSpeed = TodaySingleWeatherParameterTemplate()
     let cloudCover = TodaySingleWeatherParameterTemplate()
     let uvIndex = TodaySingleWeatherParameterTemplate()
-    let lineChartView = LineChartView()
     
     // To apply gradient for each parameter
     var parameterArray = [TodaySingleWeatherParameterTemplate]()
@@ -138,65 +130,37 @@ class TodayConditionView: UIView {
         mainView.addSubview(windSpeed.mainView)
         mainView.addSubview(cloudCover.mainView)
         mainView.addSubview(uvIndex.mainView)
-        mainView.addSubview(lineChartView)
         
         mainView.translateMask()
-        lineChartView.translateMask()
         
         mainView.backgroundColor = .clear
         
         feelsLike.parameterNameLabel.text = "Feels like"
-        feelsLike.parameterImage.image = UIImage(named: ConditionImages.thermometerHot)
+        feelsLike.parameterImage.image = ConditionImages.thermometerHot
         
         rain.parameterNameLabel.text = "Precipitation"
-        rain.parameterImage.image = UIImage(named: ConditionImages.rainfall)
+        rain.parameterImage.image = ConditionImages.rainfall
         
         clothes.parameterNameLabel.text = "Clothes"
-        clothes.parameterImage.image = UIImage(named: "dress")
+        clothes.parameterImage.image =  Clothes.hoodie
         
         pressure.parameterNameLabel.text = "Pressure"
-        pressure.parameterImage.image = UIImage(named: ConditionImages.pressure)
+        pressure.parameterImage.image = ConditionImages.pressure
         
         humidity.parameterNameLabel.text = "Humidity"
-        humidity.parameterImage.image = UIImage(named: ConditionImages.humidity)
+        humidity.parameterImage.image = ConditionImages.humidity
         
         visibility.parameterNameLabel.text = "Visibility"
-        visibility.parameterImage.image = UIImage(named: ConditionImages.visibility)
+        visibility.parameterImage.image = ConditionImages.visibility
         
         windSpeed.parameterNameLabel.text = "Wind"
-        windSpeed.parameterImage.image = UIImage(named: ConditionImages.windDirection)
+        windSpeed.parameterImage.image = ConditionImages.windDirection
         
         cloudCover.parameterNameLabel.text = "Cloud cover"
-        cloudCover.parameterImage.image = UIImage(named: WeatherImages.cloudy)
+        cloudCover.parameterImage.image = ConditionImages.cloud
         
         uvIndex.parameterNameLabel.text = "UV index"
-        uvIndex.parameterImage.image = UIImage(named: ConditionImages.uvGreen)
-        
-        // Set Chart (Graph)
-        lineChartView.rightAxis.enabled = false
-        let yAxis = lineChartView.leftAxis
-        yAxis.labelFont = UIFont(name: CustomFonts.loraMedium, size: 16) ?? .systemFont(ofSize: 16)
-        yAxis.labelTextColor = UIColor(named: CustomColors.colorDarkBlue) ?? .black
-        yAxis.axisLineColor = UIColor(named: CustomColors.colorGray) ?? .systemGray
-        yAxis.gridColor = UIColor(named: CustomColors.colorGray) ?? .systemGray
-        yAxis.labelPosition = .outsideChart
-        yAxis.labelXOffset = 0
-        yAxis.setLabelCount(5, force: true)
-        
-        let xAxis = lineChartView.xAxis
-        xAxis.labelFont = UIFont(name: CustomFonts.loraMedium, size: 16) ?? .systemFont(ofSize: 16)
-        xAxis.labelTextColor = UIColor(named: CustomColors.colorDarkBlue) ?? .black
-        xAxis.axisLineColor = UIColor(named: CustomColors.colorGray) ?? .systemGray
-        xAxis.gridColor = UIColor(named: CustomColors.colorGray) ?? .systemGray
-        xAxis.labelPosition = .bottom
-        xAxis.yOffset = 10
-        xAxis.valueFormatter = XAxisValueFormatter()
-        
-        // Color of charts label
-        lineChartView.legend.textColor = UIColor(named: CustomColors.colorDarkBlue) ?? .white
-        lineChartView.scaleXEnabled = false
-        lineChartView.scaleYEnabled = false
-        lineChartView.isUserInteractionEnabled = false
+        uvIndex.parameterImage.image = ConditionImages.uvGreen
         
         NSLayoutConstraint.activate([
             mainView.topAnchor.constraint(equalTo: self.topAnchor),
@@ -247,12 +211,7 @@ class TodayConditionView: UIView {
             uvIndex.mainView.topAnchor.constraint(equalTo: cloudCover.mainView.bottomAnchor, constant: spacingForView),
             uvIndex.mainView.leadingAnchor.constraint(equalTo: mainView.leadingAnchor, constant: 0),
             uvIndex.mainView.trailingAnchor.constraint(equalTo: mainView.trailingAnchor, constant: 0),
-            uvIndex.mainView.heightAnchor.constraint(equalToConstant: buttonHeight),
-            
-            lineChartView.topAnchor.constraint(equalTo: uvIndex.mainView.bottomAnchor, constant: 50),
-            lineChartView.leadingAnchor.constraint(equalTo: mainView.leadingAnchor, constant: 0),
-            lineChartView.trailingAnchor.constraint(equalTo: mainView.trailingAnchor, constant: 0),
-            lineChartView.heightAnchor.constraint(equalToConstant: 250)
+            uvIndex.mainView.heightAnchor.constraint(equalToConstant: buttonHeight)
         ])
         
         parameterArray.append(feelsLike)

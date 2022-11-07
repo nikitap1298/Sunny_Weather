@@ -51,24 +51,25 @@ class CurrentWeatherView: UIView {
         mainView.backgroundColor = .clear
         
         dateLabel.textAlignment = .left
-        dateLabel.textColor = UIColor(named: CustomColors.colorRed)
+        dateLabel.textColor = CustomColors.colorRed
         dateLabel.font = UIFont(name: CustomFonts.loraMedium, size: 16)
         
         temperatureLabel.textAlignment = .left
-        temperatureLabel.textColor = UIColor(named: CustomColors.colorVanilla)
+        temperatureLabel.textColor = CustomColors.colorVanilla
         temperatureLabel.font = UIFont(name: CustomFonts.loraBold, size: 45)
         
         temperatureImage.contentMode = .scaleAspectFit
         
         descriptionLabel.textAlignment = .center
-        descriptionLabel.textColor = UIColor(named: CustomColors.colorVanilla)
+        descriptionLabel.textColor = CustomColors.colorVanilla
         descriptionLabel.font = UIFont(name: CustomFonts.loraMedium, size: 16)
         
-        cityImage.image = UIImage(named: CustomImages.location_2)
-        cityImage.tintColor = UIColor(named: CustomColors.colorVanilla)
+        cityImage.image = UIImages.location_2
+        cityImage.tintColor = CustomColors.colorVanilla
         
         cityNameLabel.textAlignment = .left
-        cityNameLabel.textColor = UIColor(named: CustomColors.colorVanilla)
+        cityNameLabel.text = "City"
+        cityNameLabel.textColor = CustomColors.colorVanilla
         cityNameLabel.font = UIFont(name: CustomFonts.loraMedium, size: 16)
         
         NSLayoutConstraint.activate([

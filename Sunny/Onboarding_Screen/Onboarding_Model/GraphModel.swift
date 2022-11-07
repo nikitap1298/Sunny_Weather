@@ -8,6 +8,7 @@
 import UIKit
 import Charts
 
+// MARK: - XAxisValueFormatter
 class XAxisValueFormatter: NSObject, AxisValueFormatter {
 
     func stringForValue(_ value: Double, axis: AxisBase?) -> String {
@@ -16,7 +17,6 @@ class XAxisValueFormatter: NSObject, AxisValueFormatter {
         if timeFormatIsDef == true || timeFormatIsDef == nil {
             let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = "h:00 a"
-//            dateFormatter.timeZone = TimeZone.current
             let date = Date(timeIntervalSince1970: value)
             let time = dateFormatter.string(from: date)
             
@@ -31,11 +31,10 @@ class XAxisValueFormatter: NSObject, AxisValueFormatter {
         } else {
             let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = "HH:00"
-//            dateFormatter.timeZone = TimeZone.current
             let date = Date(timeIntervalSince1970: value)
             let time = dateFormatter.string(from: date)
             
-            axis?.setLabelCount(6, force: true)
+            axis?.setLabelCount(5, force: true)
             if axis?.entries.last == value {
                 return ""
             } else if axis?.entries.first == value {
@@ -45,4 +44,15 @@ class XAxisValueFormatter: NSObject, AxisValueFormatter {
             return time
         }
     }
+}
+
+// MARK: - YAxisValueFormatter
+class YAxisValueFormatter: NSObject, AxisValueFormatter {
+    
+    private var converter = Converter()
+    
+    func stringForValue(_ value: Double, axis: Charts.AxisBase?) -> String {
+        converter.convertTemperature(value)
+    }
+    
 }

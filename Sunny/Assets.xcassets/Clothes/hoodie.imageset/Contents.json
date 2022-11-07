@@ -1,8 +1,19 @@
 {
   "images" : [
     {
-      "filename" : "hoodie.png",
-      "idiom" : "universal"
+      "filename" : "hoodie-2.png",
+      "idiom" : "universal",
+      "scale" : "1x"
+    },
+    {
+      "filename" : "hoodie-2@2x.png",
+      "idiom" : "universal",
+      "scale" : "2x"
+    },
+    {
+      "filename" : "hoodie-2@3x.png",
+      "idiom" : "universal",
+      "scale" : "3x"
     }
   ],
   "info" : {

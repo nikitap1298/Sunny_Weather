@@ -4,6 +4,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21207"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -19,12 +20,27 @@
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="LaunchScreen" translatesAutoresizingMaskIntoConstraints="NO" id="KN2-cD-dgV">
                                 <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                             </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Sunny" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="r1a-9M-5RR">
+                                <rect key="frame" x="137.66666666666666" y="342" width="118" height="48"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="40"/>
+                                <color key="textColor" name="Color_Vanilla"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Ellipse 10" translatesAutoresizingMaskIntoConstraints="NO" id="s2T-cR-83l">
+                                <rect key="frame" x="0.0" y="492" width="406" height="360"/>
+                            </imageView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <constraints>
+                            <constraint firstItem="s2T-cR-83l" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="DEE-wP-rZa"/>
+                            <constraint firstAttribute="bottom" secondItem="s2T-cR-83l" secondAttribute="bottom" id="MkE-mz-EyC"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="KN2-cD-dgV" secondAttribute="trailing" id="NFU-ES-sYb"/>
+                            <constraint firstItem="r1a-9M-5RR" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="P27-1K-fIp"/>
+                            <constraint firstAttribute="trailing" secondItem="s2T-cR-83l" secondAttribute="trailing" constant="-13" id="QKg-DA-DSS"/>
+                            <constraint firstItem="r1a-9M-5RR" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" constant="-60" id="SXx-to-Wes"/>
                             <constraint firstItem="KN2-cD-dgV" firstAttribute="top" secondItem="Ze5-6b-2t3" secondAttribute="top" id="YXq-jh-bPw"/>
                             <constraint firstItem="KN2-cD-dgV" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="fjy-zC-goC"/>
+                            <constraint firstItem="s2T-cR-83l" firstAttribute="top" secondItem="r1a-9M-5RR" secondAttribute="bottom" constant="102" id="nG3-2g-cBi"/>
                             <constraint firstAttribute="bottom" secondItem="KN2-cD-dgV" secondAttribute="bottom" id="ver-XD-cag"/>
                         </constraints>
                     </view>
@@ -35,6 +51,10 @@
         </scene>
     </scenes>
     <resources>
+        <image name="Ellipse 10" width="293.33334350585938" height="265.66665649414062"/>
         <image name="LaunchScreen" width="341.33334350585938" height="341.33334350585938"/>
+        <namedColor name="Color_Vanilla">
+            <color red="1" green="0.97254901960784312" blue="0.92156862745098034" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
     </resources>
 </document>

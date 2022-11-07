@@ -56,19 +56,13 @@ class SearchCollectionView: UIView {
             
             // Different number of sections in CollectionView depending on the Device Model
             switch UIDevice.modelName {
-            case "iPod touch (7th generation)", "Simulator iPod touch (7th generation)":
-                numberOfSections = 4
-            case "iPhone 6s", "Simulator iPhone 6s":
-                numberOfSections = 4
-            case "iPhone 7", "Simulator iPhone 7":
-                numberOfSections = 4
-            case "iPhone 8", "Simulator iPhone 8":
-                numberOfSections = 4
-            case "iPhone SE", "Simulator iPhone SE":
-                numberOfSections = 4
-            case "iPhone SE (2nd generation)", "Simulator iPhone SE (2nd generation)":
-                numberOfSections = 4
-            case "iPhone SE (3rd generation)", "Simulator iPhone SE (3rd generation)":
+            case "iPod touch (7th generation)", "Simulator iPod touch (7th generation)",
+                "iPhone 6s", "Simulator iPhone 6s",
+                "iPhone 7", "Simulator iPhone 7",
+                "iPhone 8", "Simulator iPhone 8",
+                "iPhone SE", "Simulator iPhone SE",
+                "iPhone SE (2nd generation)", "Simulator iPhone SE (2nd generation)",
+                "iPhone SE (3rd generation)", "Simulator iPhone SE (3rd generation)" :
                 numberOfSections = 4
             default:
                 numberOfSections = 5
@@ -139,7 +133,7 @@ class CustomSearchCollectionViewCell: SwipeCollectionViewCell {
         firstStackView.translateMask()
         secondStackView.translateMask()
         
-        mainView.backgroundColor = UIColor(named: CustomColors.colorVanilla)
+        mainView.backgroundColor = CustomColors.colorVanilla
         mainView.addCornerRadius()
         
         firstStackView.axis = .vertical
@@ -175,11 +169,11 @@ class CustomSearchCollectionViewCell: SwipeCollectionViewCell {
         descriptionLabel.translateMask()
         
         cityLabel.textAlignment = .left
-        cityLabel.textColor = UIColor(named: CustomColors.colorGray)
+        cityLabel.textColor = CustomColors.colorGray
         cityLabel.font = UIFont(name: CustomFonts.loraSemiBold, size: 20)
         
         descriptionLabel.textAlignment = .left
-        descriptionLabel.textColor = UIColor(named: CustomColors.colorGray)
+        descriptionLabel.textColor = CustomColors.colorGray
         descriptionLabel.font = UIFont(name: CustomFonts.loraMedium, size: 16)
         
         firstStackView.addArrangedSubview(cityLabel)
@@ -191,7 +185,7 @@ class CustomSearchCollectionViewCell: SwipeCollectionViewCell {
         conditionImage.translateMask()
         
         temperatureLabel.textAlignment = .center
-        temperatureLabel.textColor = UIColor(named: CustomColors.colorGray)
+        temperatureLabel.textColor = CustomColors.colorGray
         temperatureLabel.font = UIFont(name: CustomFonts.loraSemiBold, size: 20)
         
         conditionImage.contentMode = .scaleAspectFit

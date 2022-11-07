@@ -15,6 +15,12 @@ protocol WeatherManagerDelegate: AnyObject {
     func didUpdateDailyForecast(_ weatherManager: WeatherManager, dailyForecast: DailyForecastModel)
 }
 
+// Extension which helps to avoid whiting func of the protocol
+extension WeatherManagerDelegate {
+    func didUpdateHourlyForecast(_ weatherManager: WeatherManager, hourlyForecast: HourlyForecastModel) { }
+    func didUpdateDailyForecast(_ weatherManager: WeatherManager, dailyForecast: DailyForecastModel) { }
+}
+
 struct WeatherManager {
     
     private let header: HTTPHeaders = [.authorization(bearerToken: JWT.tokenForWeatherKit)]
@@ -31,7 +37,7 @@ struct WeatherManager {
             if let currentWeather = self.parseCurrentJSON(data) {
                 self.weatherManagerDelegate?.didUpdateCurrentWeather(self, currentWeather: currentWeather)
             }
-            print(response)
+//            print(response)
         }
 //        AF.request("https://weatherkit.apple.com/api/v1/weather/en-US/56.3120034/38.1574277?dataSets=currentWeather", headers: header).responseJSON { i in
 //            print(i)

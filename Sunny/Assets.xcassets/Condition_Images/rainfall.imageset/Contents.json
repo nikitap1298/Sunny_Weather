@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "rainfall.png",
+      "filename" : "protection.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "rainfall@2x.png",
+      "filename" : "protection@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "rainfall@3x.png",
+      "filename" : "protection@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

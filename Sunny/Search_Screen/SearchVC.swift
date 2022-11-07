@@ -9,6 +9,7 @@ import UIKit
 import CoreLocation
 import SwipeCellKit
 import SPIndicator
+import MapKit
 
 // MARK: - Protocols
 protocol SearchVCDelegate: AnyObject {
@@ -21,8 +22,8 @@ class SearchVC: UIViewController {
     // MARK: - Private Properties
     private var backButton: UIButton = {
         let backButton = UIButton()
-        backButton.setImage(UIImage(named: CustomImages.backLeft), for: .normal)
-        backButton.tintColor = UIColor(named: CustomColors.colorGray)
+        backButton.setImage(UIImages.backLeft, for: .normal)
+        backButton.tintColor = CustomColors.colorGray
         backButton.translateMask()
         return backButton
     }()
@@ -36,6 +37,10 @@ class SearchVC: UIViewController {
     
     private var addressManager = AddressManager()
     private var weatherManager = WeatherManager()
+    
+    // City Search
+    private let cityAutoComplete = CityAutoComplete()
+    private let autoCompleteTableView = AutoCompleteView()
     
     // Models
     private var addressModel = AddressModel()
@@ -60,29 +65,21 @@ class SearchVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.backgroundColor = UIColor(named: CustomColors.colorLightGreen)
+        view.backgroundColor = CustomColors.colorLightGreen
         customNavigationBar()
+        setUpSwipeGestureRecognizer()
         
         addressManager.addressManagerDelegate = self
         weatherManager.weatherManagerDelegate = self
         
         addressManager.fetchAddressFromCoord(latitude, longitude)
         
+        cityAutoComplete.searchCompleter.delegate = self
+        cityAutoComplete.searchCompleter.region = MKCoordinateRegion(.world)
+        cityAutoComplete.searchCompleter.resultTypes = MKLocalSearchCompleter.ResultType([.address])
+        
         setUpUI()
         registerForKeyboardNotifications()
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        
-//        weatherManager.fetchCurrentWeather(self.lat, self.lon)
-        
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        
-        
     }
     
     // MARK: - Actions
@@ -90,11 +87,25 @@ class SearchVC: UIViewController {
         navigationController?.popViewControllerToRight()
     }
     
-    @objc private func didTapCancelButton() {
+    @objc private func didSwipeRight(_ recognizer: UISwipeGestureRecognizer) {
+        if recognizer.state == .ended {
+            navigationController?.popViewControllerToRight()
+        }
+    }
+    
+    @objc private func didTapCancelButton(_ sender: UISwipeGestureRecognizer) {
+        textView.searchTextField.text = ""
         view.endEditing(true)
     }
     
     // MARK: - Private Functions
+    private func setUpSwipeGestureRecognizer() {
+        let swipeGestureRecognizer = UISwipeGestureRecognizer()
+        swipeGestureRecognizer.addTarget(self, action: #selector(didSwipeRight(_ :)))
+        swipeGestureRecognizer.direction = .right
+        view.addGestureRecognizer(swipeGestureRecognizer)
+    }
+    
     private func setUpUI() {
         view.addSubview(textView.mainView)
         view.addSubview(searchCollectionView.collectionView)
@@ -102,6 +113,9 @@ class SearchVC: UIViewController {
         textView.searchTextField.delegate = self
         searchCollectionView.collectionView.delegate = self
         searchCollectionView.collectionView.dataSource = self
+        
+        autoCompleteTableView.tableView.delegate = self
+        autoCompleteTableView.tableView.dataSource = self
         
         textViewBottomAnchor = textView.mainView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -offSetValue)
         
@@ -133,26 +147,47 @@ class SearchVC: UIViewController {
         textView.cancelButton.addTarget(self, action: #selector(didTapCancelButton), for: .touchUpInside)
     }
     
+    private func setUpAutoCompleteTableView() {
+        view.addSubview(autoCompleteTableView.tableView)
+        
+        NSLayoutConstraint.activate([
+            autoCompleteTableView.tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
+            autoCompleteTableView.tableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 10),
+            autoCompleteTableView.tableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -10),
+            autoCompleteTableView.tableView.bottomAnchor.constraint(equalTo: textView.mainView.topAnchor, constant: -20)
+        ])
+        
+        // Register custom cell
+        autoCompleteTableView.tableView.register(CustomAutoCompleteCell.self, forCellReuseIdentifier: CustomAutoCompleteCell.identifier)
+    }
+    
     private func registerForKeyboardNotifications() {
         let showNotification = UIResponder.keyboardWillShowNotification
         NotificationCenter.default.addObserver(forName: showNotification, object: nil, queue: .main) { [weak self] notification in
-            if let keyBoardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
-                self?.textViewBottomAnchor?.constant = -(keyBoardSize.height + 10.0 )
-                self?.backButton.tintColor = UIColor(named: CustomColors.colorVanilla)
-                // Doesn't work corrently
-                self?.title = ""
-                UIView.animate(withDuration: 3.0) {
-                    self?.view.layoutIfNeeded()
-                }
+            guard let keyBoardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else {
+                return
             }
+            self?.textViewBottomAnchor?.constant = -(keyBoardSize.height + 10.0 )
+            self?.backButton.tintColor = CustomColors.colorVanilla
+            self?.navigationController?.setNavigationBarHidden(true, animated: true)
+            
+            UIView.animate(withDuration: 0) {
+                self?.view.layoutIfNeeded()
+            } completion: { _ in
+                self?.setUpAutoCompleteTableView()
+            }
+            
         }
         
         let hideNotification = UIResponder.keyboardWillHideNotification
         NotificationCenter.default.addObserver(forName: hideNotification, object: nil, queue: .main) { [weak self] _ in
             self?.view.removeBlur()
             self?.textViewBottomAnchor?.constant = -(self?.offSetValue ?? 20.0)
-            self?.backButton.tintColor = UIColor(named: CustomColors.colorGray)
-            self?.title = self?.screenTitle
+            self?.backButton.tintColor = CustomColors.colorGray
+            self?.navigationController?.setNavigationBarHidden(false, animated: true)
+            
+            self?.autoCompleteTableView.tableView.removeFromSuperview()
+            
             UIView.animate(withDuration: 3.0) {
                 self?.view.layoutIfNeeded()
             }
@@ -165,29 +200,79 @@ class SearchVC: UIViewController {
 extension SearchVC: UISearchTextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         isCurrent = false
-        addressManager.fetchCoordinatesFromAddress(textField.text!)
-        textField.text = ""
-        textField.resignFirstResponder()
-        searchCollectionView.collectionView.reloadData()
+        
+        cityAutoComplete.searchCompleter.queryFragment = textField.text ?? ""
+        // Table does not update without this line!
+        autoCompleteTableView.tableView.reloadData()
+//        textField.text = ""
         return true
     }
     
-    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        let maxLenght = 20
-        let currentString = (textField.text ?? "") as NSString
-        let newString = currentString.replacingCharacters(in: range, with: string)
-        return newString.count <= maxLenght
-    }
-    
     func textFieldDidBeginEditing(_ textField: UITextField) {
-        textView.cancelButton.setTitleColor(UIColor(named: CustomColors.colorVanilla), for: .normal)
-        view.addBlurView(style: .systemMaterialDark)
+        textView.cancelButton.setTitleColor(CustomColors.colorVanilla, for: .normal)
+        switch traitCollection.userInterfaceStyle {
+        case .light:
+            view.addBlurView(style: .systemUltraThinMaterialDark)
+        default:
+            view.addBlurView(style: .systemThinMaterialDark)
+        }
         view.bringSubviewToFront(self.textView.mainView)
     }
     
     func textFieldDidEndEditing(_ textField: UITextField, reason: UITextField.DidEndEditingReason) {
-        textView.cancelButton.setTitleColor(UIColor(named: CustomColors.colorGray), for: .normal)
+        textView.searchTextField.text = ""
+        textView.cancelButton.setTitleColor(CustomColors.colorGray, for: .normal)
         view.removeBlur()
+        cityAutoComplete.placeArray.removeAll()
+        autoCompleteTableView.tableView.reloadData()
+    }
+}
+
+// MARK: - UITableViewDelegate, UITableViewDataSource
+extension SearchVC: UITableViewDelegate, UITableViewDataSource {
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return cityAutoComplete.placeArray.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: CustomAutoCompleteCell.identifier, for: indexPath) as? CustomAutoCompleteCell else {
+            return UITableViewCell()
+        }
+        cell.fillPlaceLabel(cityAutoComplete.placeArray[indexPath.row])
+        return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        guard let tappedCell = tableView.cellForRow(at: indexPath) as? CustomAutoCompleteCell else {
+            return
+        }
+        view.endEditing(true)
+        let place = tappedCell.placeLabel.text ?? ""
+        addressManager.fetchCoordinatesFromAddress(place)
+        autoCompleteTableView.tableView.removeFromSuperview()
+        searchCollectionView.collectionView.reloadData()
+    }
+}
+
+// MARK: - MKLocalSearchCompleterDelegate
+extension SearchVC: MKLocalSearchCompleterDelegate {
+    
+    func completerDidUpdateResults(_ completer: MKLocalSearchCompleter) {
+        let searchResults = cityAutoComplete.getCityList(results: completer.results)
+        
+        for i in 0..<searchResults.count {
+            
+            // Next 4 lines of code help to format street etc. into the city and country
+            cityAutoComplete.searchRequest.naturalLanguageQuery = "\(searchResults[i].city), \(searchResults[i].country)"
+            cityAutoComplete.searchRequest.region = MKCoordinateRegion.init(.world)
+            cityAutoComplete.searchRequest.resultTypes = MKLocalSearch.ResultType.address
+            cityAutoComplete.getPlaces(tableView: autoCompleteTableView.tableView)
+        }
+    }
+    
+    func completer(_ completer: MKLocalSearchCompleter, didFailWithError error: Error) {
+        print(error.localizedDescription)
     }
 }
 
@@ -222,7 +307,6 @@ extension SearchVC: UICollectionViewDelegate, UICollectionViewDataSource {
         searchVCDelegate?.didSendName(tappedCell.cityLabel.text ?? "")
         navigationController?.popViewControllerToRight()
     }
-        
 }
 
 // MARK: - SwipeCollectionViewCellDelegate
@@ -246,15 +330,14 @@ extension SearchVC: SwipeCollectionViewCellDelegate {
             // customize the action appearance
             deleteAction.backgroundColor = .clear
             
-            deleteAction.image =  UIImage(systemName: "trash", withConfiguration: largeConfig)?.withTintColor(UIColor(named: CustomColors.colorVanilla) ?? .white, renderingMode: .alwaysTemplate).addBackgroundCircle(.systemRed)
+            deleteAction.image =  UIImage(systemName: "trash", withConfiguration: largeConfig)?.withTintColor(CustomColors.colorVanilla ?? .white, renderingMode: .alwaysTemplate).addBackgroundCircle(.systemRed)
             deleteAction.font = UIFont(name: CustomFonts.loraMedium, size: 17.5)
-            deleteAction.textColor = UIColor(named: CustomColors.colorGray)
+            deleteAction.textColor = CustomColors.colorGray
             
             return [deleteAction]
             
         }
-    
-       return []
+        return []
     }
     
     func collectionView(_ collectionView: UICollectionView, editActionsOptionsForItemAt indexPath: IndexPath, for orientation: SwipeActionsOrientation) -> SwipeOptions {
@@ -296,21 +379,14 @@ extension SearchVC: WeatherManagerDelegate {
         } else {
             cityModel.name = "\(addressModel.name), \(addressModel.countryCode)"
         }
+        
         cityModel.conditionDescription = weatherDescription.condition(currentWeather.conditionCode) ?? ""
-        cityModel.temperature = converter.convertTemperature(currentWeather.temperature)
+        cityModel.temperature = converter.convertTemperature(currentWeather.temperature ?? 0.0)
         cityModel.conditionImage = currentWeather.weatherIcon
         
         cityArray.append(cityModel)
         
         searchCollectionView.collectionView.reloadData()
-    }
-    
-    func didUpdateHourlyForecast(_ weatherManager: WeatherManager, hourlyForecast: HourlyForecastModel) {
-        print("b")
-    }
-    
-    func didUpdateDailyForecast(_ weatherManager: WeatherManager, dailyForecast: DailyForecastModel) {
-        print("c")
     }
     
 }
@@ -323,7 +399,7 @@ private extension SearchVC {
         appearance.backgroundColor = .clear
         navigationItem.title = screenTitle
         appearance.titleTextAttributes = [
-            .foregroundColor: UIColor(named: CustomColors.colorGray) as Any,
+            .foregroundColor: CustomColors.colorGray as Any,
             .font: UIFont(name: CustomFonts.nunitoBold, size: 26) ?? UIFont.systemFont(ofSize: 26)
         ]
         
@@ -335,8 +411,8 @@ private extension SearchVC {
         
         // Custom Left Button
         let backButton = UIButton()
-        backButton.customNavigationButton(UIImage(named: CustomImages.backLeft),
-                                          UIColor(named: CustomColors.colorGray))
+        backButton.customNavigationButton(UIImages.backLeft,
+                                          CustomColors.colorGray)
         let leftButton = UIBarButtonItem(customView: backButton)
         navigationItem.leftBarButtonItem = leftButton
         backButton.addTarget(self, action: #selector(didTapBackButton), for: .touchUpInside)

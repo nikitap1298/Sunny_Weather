@@ -47,8 +47,11 @@ class CustomAppearanceView: UIView {
         stackTwo.translateMask()
         stackThree.translateMask()
         
+        self.addCornerRadius()
+        self.backgroundColor = OtherUIColors.navigationItems
+        
         mainView.addCornerRadius()
-//        mainView.backgroundColor = UIColor(named: CustomColors.colorLightGray)
+        mainView.backgroundColor = SettingsColors.backgroungWhite
         
         stackOne.axis = .vertical
         stackOne.distribution = .equalSpacing
@@ -63,10 +66,10 @@ class CustomAppearanceView: UIView {
         stackThree.spacing = 20
         
         NSLayoutConstraint.activate([
-            mainView.topAnchor.constraint(equalTo: self.topAnchor),
-            mainView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
-            mainView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
-            mainView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+            mainView.topAnchor.constraint(equalTo: self.topAnchor, constant: 1),
+            mainView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 1),
+            mainView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -1),
+            mainView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -1),
             
             stackTwo.centerXAnchor.constraint(equalTo: mainView.centerXAnchor),
             stackTwo.centerYAnchor.constraint(equalTo: mainView.centerYAnchor),
@@ -97,16 +100,16 @@ class CustomAppearanceView: UIView {
         lightLabel.translateMask()
         lightButton.translateMask()
         
-        lightImage.image = UIImage(named: "LightMode")
+        lightImage.image = AppearanceImages.light
         lightImage.contentMode = .scaleAspectFit
         
         lightLabel.text = "Light"
         lightLabel.textAlignment = .center
         lightLabel.font = UIFont(name: CustomFonts.loraMedium, size: 16)
-        lightLabel.textColor = UIColor(named: CustomColors.colorDarkBlue1)
+        lightLabel.textColor = AppearanceColors.appearanceText
         
-        lightButton.setImage(UIImage(systemName: "circle"), for: .normal)
-        lightButton.tintColor = UIColor(named: CustomColors.colorDarkBlue1)
+        lightButton.setImage(SFSymbols.circle, for: .normal)
+        lightButton.tintColor = AppearanceColors.appearanceText
         
         stackOne.addArrangedSubview(lightImage)
         stackOne.addArrangedSubview(lightLabel)
@@ -118,16 +121,16 @@ class CustomAppearanceView: UIView {
         darkLabel.translateMask()
         darkButton.translateMask()
         
-        darkImage.image = UIImage(named: "DarkMode")
+        darkImage.image = AppearanceImages.dark
         darkImage.contentMode = .scaleAspectFit
         
         darkLabel.text = "Dark"
         darkLabel.textAlignment = .center
         darkLabel.font = UIFont(name: CustomFonts.loraMedium, size: 16)
-        darkLabel.textColor = UIColor(named: CustomColors.colorDarkBlue1)
+        darkLabel.textColor = AppearanceColors.appearanceText
         
-        darkButton.setImage(UIImage(systemName: "circle"), for: .normal)
-        darkButton.tintColor = UIColor(named: CustomColors.colorDarkBlue1)
+        darkButton.setImage(SFSymbols.circle, for: .normal)
+        darkButton.tintColor = AppearanceColors.appearanceText
         
         stackTwo.addArrangedSubview(darkImage)
         stackTwo.addArrangedSubview(darkLabel)
@@ -139,16 +142,16 @@ class CustomAppearanceView: UIView {
         systemLabel.translateMask()
         systemButton.translateMask()
         
-        systemImage.image = UIImage(named: "SystemMode")
+        systemImage.image = AppearanceImages.system
         systemImage.contentMode = .scaleAspectFit
         
         systemLabel.text = "System"
         systemLabel.textAlignment = .center
         systemLabel.font = UIFont(name: CustomFonts.loraMedium, size: 16)
-        systemLabel.textColor = UIColor(named: CustomColors.colorDarkBlue1)
+        systemLabel.textColor = AppearanceColors.appearanceText
         
-        systemButton.setImage(UIImage(systemName: "circle"), for: .normal)
-        systemButton.tintColor = UIColor(named: CustomColors.colorDarkBlue1)
+        systemButton.setImage(SFSymbols.circle, for: .normal)
+        systemButton.tintColor = AppearanceColors.appearanceText
         
         stackThree.addArrangedSubview(systemImage)
         stackThree.addArrangedSubview(systemLabel)

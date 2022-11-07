@@ -48,7 +48,7 @@ class FirstBlock: UIView {
         distance.translateMask()
         timeFormat.translateMask()
         
-        mainView.backgroundColor = UIColor(named: CustomColors.colorGray)
+        mainView.backgroundColor = SettingsColors.blockAndText
         
         temperature.settingsLabel.text = "Temperature"
         temperature.leftValueLabel.text = "ºC"

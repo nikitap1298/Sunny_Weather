@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "visibility.png",
+      "filename" : "visible.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "visibility@2x.png",
+      "filename" : "visible@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "visibility@3x.png",
+      "filename" : "visible@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

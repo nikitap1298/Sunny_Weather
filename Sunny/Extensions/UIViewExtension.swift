@@ -28,6 +28,10 @@ extension UIView {
         let blurEffect = UIBlurEffect(style: style)
         blurEffectView = UIVisualEffectView(effect: blurEffect)
         blurEffectView.frame = bounds
+        blurEffectView.effect = nil
+        UIView.animate(withDuration: 0.5) {
+            blurEffectView.effect = UIBlurEffect(style: style)
+        }
         addSubview(blurEffectView)
     }
     
@@ -36,6 +40,7 @@ extension UIView {
         for view in self.subviews {
             if let view = view as? UIVisualEffectView {
                 view.removeFromSuperview()
+                view.effect = nil
             }
         }
     }
@@ -52,12 +57,15 @@ extension UIView {
     }
     
     // Gradient
-    func addGradient(_ firstColor: UIColor,
-                     _ secondColor: UIColor,
+    func addGradient(_ firstColor: UIColor?,
+                     _ secondColor: UIColor?,
                      _ startPoint: CGPoint = CGPoint(x: 0, y: 0),
                      _ endPoint: CGPoint = CGPoint(x: 0.8, y: 1)) {
         
-        // Создание гридиентновго слоя
+        guard let firstColor = firstColor,
+              let secondColor = secondColor else { return }
+        
+        // Создание гридиентного слоя
         let gradient = CAGradientLayer()
         
         // Перечисляем цвета градиента

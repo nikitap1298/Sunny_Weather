@@ -12,6 +12,12 @@ import Alamofire
 import SPIndicator
 import Network
 
+// MARK: - Enum DayButtonType
+enum DayButtonType {
+    case now
+    case next7Days
+}
+
 class OnboardingVC: UIViewController, ChartViewDelegate {
 
     // MARK: - Private Properties
@@ -24,6 +30,8 @@ class OnboardingVC: UIViewController, ChartViewDelegate {
     private let temperatureCollectionView = TemperatureCollectionView()
     private let daybuttons = DayButtons()
     private let todayConditionView = TodayConditionView()
+    private let graphView = GraphView()
+    private let weatherKitView = WeatherKitView()
     private let nextFiveDaysConditionView = NextSevenDaysConditionView()
     
     private let tokenManager = TokenManager()
@@ -43,8 +51,7 @@ class OnboardingVC: UIViewController, ChartViewDelegate {
     private let converter = Converter()
     private let timeConverter = TimeConverter()
     private let timeModel = TimeModel()
-    private let gradientModel = GradientModel()
-    private let currentViewModel = CurrentViewModel()
+    private let currentTemperatureModel = CurrentTemperatureModel()
     
     private var todayButtonPressed: Bool = true
     private var firstLaunch: Bool = true
@@ -53,18 +60,27 @@ class OnboardingVC: UIViewController, ChartViewDelegate {
     private var latitude = 0.0
     private var longitude = 0.0
     
-    var time: Int? {
-        didSet {
-            print("Change")
-            print(time ?? 0)
-        }
-    }
-    
     // MARK: - Public Properties
     var locationTimer = Timer()
-//    var tokenTimer = Timer()
     var currentForecastTimer = Timer()
     var cityForecastTimer = Timer()
+    
+    // MARK: - Computed Properties
+    
+    // When timeZone gets a correct value, all elements change
+    private var timeZone: Int? {
+        didSet {
+            currentTemperatureModel.fillView(currentWeatherView,
+                                             todayConditionView,
+                                             currentWeatherModel,
+                                             converter,
+                                             timeConverter,
+                                             timeZone)
+            setUpGraph()
+            temperatureCollectionView.collectionView.reloadData()
+            nextFiveDaysConditionView.collectionView.reloadData()
+        }
+    }
     
     // MARK: - Life Cycle
     override func viewDidLoad() {
@@ -93,12 +109,13 @@ class OnboardingVC: UIViewController, ChartViewDelegate {
         locationManager.delegate = self
         
         // Reload all views
-        currentViewModel.fillView(currentWeatherView,
-                              todayConditionView,
-                              currentWeatherModel,
-                              converter,
-                              timeConverter)
-        setUpGraph()
+        currentTemperatureModel.fillView(currentWeatherView,
+                                         todayConditionView,
+                                         currentWeatherModel,
+                                         converter,
+                                         timeConverter,
+                                         timeZone)
+        
         temperatureCollectionView.collectionView.reloadData()
         nextFiveDaysConditionView.collectionView.reloadData()
         
@@ -110,9 +127,9 @@ class OnboardingVC: UIViewController, ChartViewDelegate {
         setUpDayButtons()
         
         if todayButtonPressed {
-            setUpTodayConditionView()
+            setUpNowView()
         } else {
-            setUpNextFiveDaysConditionView()
+            setUpNextFiveDaysView()
         }
     }
     
@@ -137,25 +154,11 @@ class OnboardingVC: UIViewController, ChartViewDelegate {
     }
     
     @objc private func didTapTodayButton() {
-        daybuttons.todayButton.setTitleColor(UIColor(named: CustomColors.colorVanilla), for: .normal)
-        daybuttons.nextTenDaysButton.setTitleColor(UIColor(named: CustomColors.colorDarkBlue1), for: .normal)
-        mainScrollView.contentViewHeightAnchor?.constant = Constraints.contentViewTodayHeight
-        todayButtonPressed = true
-        nextFiveDaysConditionView.collectionView.removeFromSuperview()
-        setUpTodayConditionView()
+        dayButtonsLogic(for: .now)
     }
     
     @objc private func didTapNextFiveDaysButton() {
-        if dailyForecastModel.temperatureMin.count == 10 {
-            daybuttons.todayButton.setTitleColor(UIColor(named: CustomColors.colorDarkBlue1), for: .normal)
-            daybuttons.nextTenDaysButton.setTitleColor(UIColor(named: CustomColors.colorVanilla), for: .normal)
-            mainScrollView.contentViewHeightAnchor?.constant = Constraints.contentViewNextTenDaysHeight
-            todayButtonPressed = false
-            todayConditionView.mainView.removeFromSuperview()
-            setUpNextFiveDaysConditionView()
-        } else {
-            SPIndicator.present(title: "Error", message: "Try again later", preset: .error, haptic: .error)
-        }
+        dayButtonsLogic(for: .next7Days)
     }
     
     // MARK: - ChoosePlace Function
@@ -189,11 +192,11 @@ class OnboardingVC: UIViewController, ChartViewDelegate {
             if pathHandler.status == .satisfied {
                 print("Internet connection is on")
             } else {
-                DispatchQueue.main.async {
+                DispatchQueue.main.async { [weak self] in
                     let viewController = NoInternetVC()
                     viewController.modalPresentationStyle = .overFullScreen
                     viewController.modalTransitionStyle = .coverVertical
-                    self.present(viewController, animated: true)
+                    self?.present(viewController, animated: true)
                 }
             }
         }
@@ -257,18 +260,28 @@ class OnboardingVC: UIViewController, ChartViewDelegate {
         daybuttons.nextTenDaysButton.addTarget(self, action: #selector(didTapNextFiveDaysButton), for: .touchUpInside)
     }
     
-    private func setUpTodayConditionView() {
+    private func setUpNowView() {
         mainScrollView.contentView.addSubview(todayConditionView.mainView)
+        mainScrollView.contentView.addSubview(graphView.lineChartView)
+        mainScrollView.contentView.addSubview(weatherKitView.horizontalStack)
         
         NSLayoutConstraint.activate([
             todayConditionView.mainView.topAnchor.constraint(equalTo: daybuttons.stackView.bottomAnchor, constant: 20),
             todayConditionView.mainView.leadingAnchor.constraint(equalTo: mainScrollView.contentView.leadingAnchor, constant: 10),
             todayConditionView.mainView.trailingAnchor.constraint(equalTo: mainScrollView.contentView.trailingAnchor, constant: -10),
-            todayConditionView.mainView.heightAnchor.constraint(equalToConstant: 645)
+            todayConditionView.mainView.heightAnchor.constraint(equalToConstant: 445),
+            
+            graphView.lineChartView.topAnchor.constraint(equalTo: todayConditionView.mainView.bottomAnchor, constant: 50),
+            graphView.lineChartView.leadingAnchor.constraint(equalTo: mainScrollView.contentView.leadingAnchor, constant: 10),
+            graphView.lineChartView.trailingAnchor.constraint(equalTo: mainScrollView.contentView.trailingAnchor, constant: -10),
+            graphView.lineChartView.heightAnchor.constraint(equalToConstant: 250),
+            
+            weatherKitView.horizontalStack.topAnchor.constraint(equalTo: graphView.lineChartView.bottomAnchor, constant: 30),
+            weatherKitView.horizontalStack.centerXAnchor.constraint(equalTo: mainScrollView.contentView.centerXAnchor, constant: 0)
         ])
     }
     
-    private func setUpNextFiveDaysConditionView() {
+    private func setUpNextFiveDaysView() {
         mainScrollView.contentView.addSubview(nextFiveDaysConditionView.collectionView)
         
         NSLayoutConstraint.activate([
@@ -278,45 +291,61 @@ class OnboardingVC: UIViewController, ChartViewDelegate {
         ])
     }
     
+    private func dayButtonsLogic(for dayButtonType: DayButtonType) {
+        switch dayButtonType {
+        case .now:
+            daybuttons.todayButton.setTitleColor(CustomColors.colorVanilla, for: .normal)
+            daybuttons.nextTenDaysButton.setTitleColor(CustomColors.colorDarkBlue1, for: .normal)
+            mainScrollView.contentViewHeightAnchor?.constant = Constraints.contentViewTodayHeight
+            todayButtonPressed = true
+            nextFiveDaysConditionView.collectionView.removeFromSuperview()
+            setUpNowView()
+        case .next7Days:
+            if dailyForecastModel.temperatureMin.count > 0 {
+                daybuttons.todayButton.setTitleColor(CustomColors.colorDarkBlue1, for: .normal)
+                daybuttons.nextTenDaysButton.setTitleColor(CustomColors.colorVanilla, for: .normal)
+                mainScrollView.contentViewHeightAnchor?.constant = Constraints.contentViewNextTenDaysHeight
+                todayButtonPressed = false
+                todayConditionView.mainView.removeFromSuperview()
+                graphView.lineChartView.removeFromSuperview()
+                weatherKitView.horizontalStack.removeFromSuperview()
+                setUpNextFiveDaysView()
+            } else {
+                SPIndicator.present(title: "Error", message: "Try again later", preset: .error, haptic: .error)
+            }
+        }
+    }
+    
     private func setUpGradientForTodayConditionView() {
         
-        let startPoint = CGPoint(x: 0, y: 0)
-        let endPoint = CGPoint(x: 0.8, y: 1)
+        let startPoint = CGPoint(x: 0.0, y: 0.2)
+        let endPoint = CGPoint(x: 1.0, y: 0.9)
         
-        let startPoint1 = CGPoint(x: 0.0, y: 0.2)
-        let endPoint1 = CGPoint(x: 1.0, y: 0.9)
+        view.addGradient(OnboardingColors.backgroundTop, OnboardingColors.backgroundBottom)
         
-        gradientModel.getGradient(view,
-                                  UIColor(named: UIColors.backgroundTop),
-                                  UIColor(named: UIColors.backgroundBottom),
-                                  startPoint,
-                                  endPoint)
-        
-        gradientModel.getGradient(currentWeatherSpace.mainView,
-                                  UIColor(named: UIColors.viewTop),
-                                  UIColor(named: UIColors.viewBottom),
-                                  startPoint,
-                                  endPoint)
+        currentWeatherSpace.mainView.addGradient(OnboardingColors.weatherBlocksTop,
+                                                 OnboardingColors.weatherBlocksBottom)
 
         for i in todayConditionView.parameterArray {
-            gradientModel.getGradient(i.mainView,
-                                      UIColor(named: UIColors.viewTop),
-                                      UIColor(named: UIColors.viewBottom),
-                                      startPoint1,
-                                      endPoint1)
+            i.mainView.addGradient(OnboardingColors.weatherBlocksTop,
+                                   OnboardingColors.weatherBlocksBottom,
+                                   startPoint,
+                                   endPoint)
         }
     }
     
     private func setUpGraph() {
         var entries = [ChartDataEntry]()
         
-        DispatchQueue.main.async {
+        DispatchQueue.main.async { [weak self] in
+            
+            guard let self = self else { return }
     
             if self.hourlyForecastModel.temperatureApparent.count > 23 {
         
                 for i in Ranges.next24Hours {
-                    entries.append(ChartDataEntry(x: self.timeConverter.convertToSeconds(self.hourlyForecastModel.forecastStart[i]),
-                                                  y: self.converter.convertTemperatureToDouble(self.hourlyForecastModel.temperatureApparent[i])))
+                    entries.append(ChartDataEntry(x: self.timeConverter.convertToSeconds(self.hourlyForecastModel.forecastStart[i], self.timeZone),
+                                                  y: self.hourlyForecastModel.temperatureApparent[i]))
                 }
             }
 
@@ -324,68 +353,19 @@ class OnboardingVC: UIViewController, ChartViewDelegate {
             set1.drawCirclesEnabled = false
             set1.mode = .cubicBezier
             set1.lineWidth = 3
-            set1.setColor(UIColor(named: CustomColors.colorDarkBlue1) ?? .blue)
-            set1.fillColor = UIColor(named: CustomColors.colorDarkBlue1)?.withAlphaComponent(1.0) ?? .blue
+            set1.setColor(OnboardingColors.graphLine ?? .blue)
+            set1.fillColor = OnboardingColors.graphSpace?.withAlphaComponent(1.0) ?? .blue
             set1.drawFilledEnabled = true
             
             set1.drawHorizontalHighlightIndicatorEnabled = false
-            set1.highlightColor = UIColor(named: CustomColors.colorRed) ?? .systemRed
+            set1.highlightColor = CustomColors.colorRed ?? .systemRed
             
             let data = LineChartData(dataSet: set1)
             data.setDrawValues(false)
             
-            self.todayConditionView.lineChartView.data = data
-            self.todayConditionView.lineChartView.delegate = self
+            self.graphView.lineChartView.data = data
+            self.graphView.lineChartView.delegate = self
         }
-    }
-    
-}
-
-// MARK: - WeatherManagerDelegate
-extension OnboardingVC: WeatherManagerDelegate {
-    
-    func didUpdateCurrentWeather(_ weatherManager: WeatherManager, currentWeather: CurrentWeatherModel) {
-        self.currentWeatherModel = currentWeather
-        print("current")
-        
-        // Get Timezone
-        timeModel.getTimezone(currentWeather.latitude, currentWeather.longitude) { i in
-            self.time = i
-//            print(self.time)
-        }
-        
-        DispatchQueue.main.async { [weak self] in
-            self?.currentViewModel.fillView(self?.currentWeatherView,
-                                        self?.todayConditionView,
-                                        currentWeather, self?.converter,
-                                        self?.timeConverter)
-        }
-    }
-    
-    func didUpdateHourlyForecast(_ weatherManager: WeatherManager, hourlyForecast: HourlyForecastModel) {
-        self.hourlyForecastModel = hourlyForecast
-        print("hourly")
-        
-        // Add condition images into array
-        conditionImageArray.removeAll()
-        for (index, condition) in hourlyForecastModel.conditionCode.enumerated() {
-            conditionImageArray.append(hourlyConditionImage.weatherIcon(condition, hourlyForecastModel.daylight[index]) ?? .checkmark)
-        }
-        temperatureCollectionView.collectionView.delegate = self
-        temperatureCollectionView.collectionView.dataSource = self
-        nextFiveDaysConditionView.collectionView.delegate = self
-        nextFiveDaysConditionView.collectionView.dataSource = self
-        temperatureCollectionView.collectionView.reloadData()
-        nextFiveDaysConditionView.collectionView.reloadData()
-        
-        self.setUpGraph()
-    }
-    
-    func didUpdateDailyForecast(_ weatherManager: WeatherManager, dailyForecast: DailyForecastModel) {
-        self.dailyForecastModel = dailyForecast
-        print("daily")
-        
-//        print(dailyForecast.maxUvIndex)
     }
     
 }
@@ -400,10 +380,20 @@ extension OnboardingVC: AddressManagerDelegate {
         weatherManager.fetchHourlyForecast(addressModel.latitude, addressModel.longitude)
         weatherManager.fetchDailyForecast(addressModel.latitude, addressModel.longitude)
         
+        // Get Timezone
+        timeModel.getTimezone(addressModel.latitude, addressModel.longitude) { timeZone in
+            self.timeZone = timeZone
+        }
+        
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
             self.navigationItem.title = addressModel.name
-            self.currentWeatherView.cityNameLabel.text = addressModel.name + ", " + addressModel.countryCode
+            
+            if addressModel.name == "" && addressModel.countryCode == "" {
+                self.currentWeatherView.cityNameLabel.text = addressModel.countryCode
+            } else {
+                self.currentWeatherView.cityNameLabel.text = addressModel.name + ", " + addressModel.countryCode
+            }
         }
         
     }
@@ -415,14 +405,62 @@ extension OnboardingVC: AddressManagerDelegate {
         weatherManager.fetchHourlyForecast(coordinateModel.latitude, coordinateModel.longitude)
         weatherManager.fetchDailyForecast(coordinateModel.latitude, coordinateModel.longitude)
         
+        // Get Timezone
+        timeModel.getTimezone(coordinateModel.latitude, coordinateModel.longitude) { timeZone in
+            self.timeZone = timeZone
+        }
+        
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
             self.navigationItem.title = coordinateModel.locality
-            self.currentWeatherView.cityNameLabel.text = coordinateModel.locality + ", " + coordinateModel.countryCode
+            
+            if coordinateModel.locality == "" && coordinateModel.countryCode == "" {
+                self.currentWeatherView.cityNameLabel.text = coordinateModel.countryCode
+            } else {
+                self.currentWeatherView.cityNameLabel.text = coordinateModel.locality + ", " + coordinateModel.countryCode
+            }
+        }
+    }
+}
+
+// MARK: - WeatherManagerDelegate
+extension OnboardingVC: WeatherManagerDelegate {
+    
+    func didUpdateCurrentWeather(_ weatherManager: WeatherManager, currentWeather: CurrentWeatherModel) {
+        self.currentWeatherModel = currentWeather
+        
+        DispatchQueue.main.async { [weak self] in
+            self?.currentTemperatureModel.fillView(self?.currentWeatherView,
+                                                   self?.todayConditionView,
+                                                   currentWeather,
+                                                   self?.converter,
+                                                   self?.timeConverter,
+                                                   self?.timeZone)
         }
     }
     
+    func didUpdateHourlyForecast(_ weatherManager: WeatherManager, hourlyForecast: HourlyForecastModel) {
+        self.hourlyForecastModel = hourlyForecast
+        
+        // Add condition images into array
+        conditionImageArray.removeAll()
+        for (index, condition) in hourlyForecastModel.conditionCode.enumerated() {
+            conditionImageArray.append(hourlyConditionImage.weatherIcon(condition, hourlyForecastModel.daylight[index]) ?? .checkmark)
+        }
+        temperatureCollectionView.collectionView.delegate = self
+        temperatureCollectionView.collectionView.dataSource = self
+        temperatureCollectionView.collectionView.reloadData()
+        
+        self.setUpGraph()
+    }
     
+    func didUpdateDailyForecast(_ weatherManager: WeatherManager, dailyForecast: DailyForecastModel) {
+        self.dailyForecastModel = dailyForecast
+        
+        nextFiveDaysConditionView.collectionView.delegate = self
+        nextFiveDaysConditionView.collectionView.dataSource = self
+        nextFiveDaysConditionView.collectionView.reloadData()
+    }
 }
 
 // MARK: - CLLocationManagerDelegate
@@ -454,36 +492,48 @@ extension OnboardingVC: UICollectionViewDelegate, UICollectionViewDataSource {
             }
             
             let conditionImage = self.conditionImageArray[indexPath.row + 1]
-            let time = timeConverter.convertToHoursMinutes(hourlyForecastModel.forecastStart[indexPath.row + 1])
+            let time = timeConverter.convertToHoursMinutes(hourlyForecastModel.forecastStart[indexPath.row + 1], timeZone)
             let temperature = converter.convertTemperature(hourlyForecastModel.temperature[indexPath.row + 1])
             
             DispatchQueue.main.async { [weak self] in
-                self?.gradientModel.getGradient(cell.mainView,
-                                                UIColor(named: UIColors.viewTop),
-                                                UIColor(named: UIColors.viewBottom),
-                                                CGPoint(x: 0.0, y: 0.2),
-                                                CGPoint(x: 1.0, y: 0.9))
+                let startPoint = CGPoint(x: 0.0, y: 0.2)
+                let endPoint = CGPoint(x: 1.0, y: 0.9)
+                
+                switch self?.traitCollection.userInterfaceStyle {
+                case .light, .unspecified:
+                    cell.mainView.addGradient(OnboardingColors.weatherBlocksTop,
+                                              OnboardingColors.collectionBottom,
+                                              startPoint,
+                                              endPoint)
+                case .dark:
+                    cell.mainView.addGradient(OnboardingColors.weatherBlocksTop,
+                                              OnboardingColors.collectionBottom1,
+                                              startPoint,
+                                              endPoint)
+                case .none:
+                    break
+                case .some(_):
+                    break
+                }
+                
                 cell.setUpCollectionCellValues(condImage: conditionImage, time: time, temperature: temperature)
             }
             return cell
         }
         
-        // NextFiveDays ConditionView
+        // NextSevenDays ConditionView
         if collectionView == nextFiveDaysConditionView.collectionView {
-            guard let cell = nextFiveDaysConditionView.collectionView.dequeueReusableCell(withReuseIdentifier: NextFiveDaysConditionCell.reuseIdentifier, for: indexPath) as? NextFiveDaysConditionCell else {
+            guard let cell = nextFiveDaysConditionView.collectionView.dequeueReusableCell(withReuseIdentifier: NextSevenDaysConditionCell.reuseIdentifier, for: indexPath) as? NextSevenDaysConditionCell else {
                 return UICollectionViewCell()
             }
             
-            let date = timeConverter.convertToDayNumber(dailyForecastModel.forecastStart[indexPath.row])
+            let date = timeConverter.convertToDayNumber(dailyForecastModel.forecastStart[indexPath.row], timeZone: timeZone)
             let temperatureMin = converter.convertTemperature(dailyForecastModel.temperatureMin[indexPath.row])
             let temperatureMax = converter.convertTemperature(dailyForecastModel.temperatureMax[indexPath.row])
             let conditionImage = hourlyConditionImage.weatherIcon(dailyForecastModel.conditionCode[indexPath.row],
                                                                   true)
             
-            DispatchQueue.main.async {
-                guard let firstColor = UIColor(named: UIColors.viewTop),
-                      let secondColor = UIColor(named: UIColors.viewBottom) else { return }
-                
+            DispatchQueue.main.async { [weak self] in
                 let startPoint = CGPoint(x: 0.0, y: 0.2)
                 let endPoint = CGPoint(x: 1.0, y: 0.9)
                 
@@ -493,7 +543,23 @@ extension OnboardingVC: UICollectionViewDelegate, UICollectionViewDataSource {
                     cell.setUpDate(date)
                 }
                 
-                cell.mainView.addGradient(firstColor, secondColor, startPoint, endPoint)
+                switch self?.traitCollection.userInterfaceStyle {
+                case .light, .unspecified:
+                    cell.mainView.addGradient(OnboardingColors.weatherBlocksTop,
+                                              OnboardingColors.collectionBottom,
+                                              startPoint,
+                                              endPoint)
+                case .dark:
+                    cell.mainView.addGradient(OnboardingColors.weatherBlocksTop,
+                                              OnboardingColors.collectionBottom1,
+                                              startPoint,
+                                              endPoint)
+                case .none:
+                    break
+                case .some(_):
+                    break
+                }
+                
                 cell.setUpTemperatureLabel(temperatureMin, temperatureMax)
                 cell.setUpConditionImage(conditionImage)
             }
@@ -504,15 +570,19 @@ extension OnboardingVC: UICollectionViewDelegate, UICollectionViewDataSource {
     
     // Open HourVC after user tap cell
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        guard let tappedCell = collectionView.cellForItem(at: indexPath) as? CustomTemperatureCollectionCell else {
-            return
+        if let tappedCell = collectionView.cellForItem(at: indexPath) as? CustomTemperatureCollectionCell  {
+            let viewController = HourVC()
+            viewController.hourlyForecastModel = hourlyForecastModel
+            viewController.cellDate = tappedCell.timeLabel.text ?? "Time"
+            viewController.currentIndex = indexPath.row
+            navigationController?.pushViewControllerFromRight(controller: viewController)
         }
+//        else if let tappedCell2 = collectionView.cellForItem(at: indexPath) as? NextSevenDaysConditionCell {
+//            let viewController = DayVC()
+//            viewController.cellDate = tappedCell2.dateLabel.text ?? "Day"
+//            navigationController?.pushViewControllerFromRight(controller: viewController)
+//        }
         
-        let viewController = HourVC()
-        viewController.hourlyForecastModel = hourlyForecastModel
-        viewController.cellDate = tappedCell.timeLabel.text ?? "Time"
-        viewController.currentIndex = indexPath.row
-        navigationController?.pushViewControllerFromRight(controller: viewController)
     }
     
 }
@@ -538,7 +608,7 @@ private extension OnboardingVC {
         appearance.backgroundColor = .clear
         navigationItem.title = "Weather"
         appearance.titleTextAttributes = [
-            .foregroundColor: UIColor(named: CustomColors.colorVanilla) as Any,
+            .foregroundColor: CustomColors.colorVanilla as Any,
             .font: UIFont(name: CustomFonts.nunitoBold, size: 26) ?? UIFont.systemFont(ofSize: 26)
         ]
         
@@ -552,15 +622,15 @@ private extension OnboardingVC {
         
         // Custom Left Button
         let settingsButton = UIButton()
-        settingsButton.customNavigationButton(UIImage(named: CustomImages.settings),
-                                              UIColor(named: CustomColors.colorVanilla))
+        settingsButton.customNavigationButton(UIImages.settings,
+                                              CustomColors.colorVanilla)
         let leftButton = UIBarButtonItem(customView: settingsButton)
         navigationItem.leftBarButtonItem = leftButton
         
         // Custom Right Button
         let searchButton = UIButton()
-        searchButton.customNavigationButton(UIImage(named: CustomImages.search),
-                                              UIColor(named: CustomColors.colorVanilla))
+        searchButton.customNavigationButton(UIImages.search,
+                                            CustomColors.colorVanilla)
         let rightButton = UIBarButtonItem(customView: searchButton)
         navigationItem.rightBarButtonItem = rightButton
         

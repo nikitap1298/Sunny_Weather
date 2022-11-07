@@ -13,11 +13,11 @@ struct ClothesModel {
         switch temperatureApparent {
         case 22...:
             return "T-Shirt"
-        case 10...21.9:
+        case 10...22:
             return "Hoodie"
-        case 4.4...9.9:
+        case 4.4...10:
             return "Jacket"
-        case ...4.3:
+        case ...4.4:
             return "Warm jacket"
         default:
             return ""
@@ -27,13 +27,13 @@ struct ClothesModel {
     func image(_ temperatureApparent: Double, _ precipitationIntensity: Double) -> UIImage? {
         switch temperatureApparent {
         case 22...:
-            return UIImage(named: "t-shirt")
-        case 10...21.9:
-            return UIImage(named: "hoodie")
-        case 4.4...9.9:
-            return UIImage(named: "jacket")
-        case ...4.3:
-            return UIImage(named: "jacket_warm")
+            return Clothes.tShirt
+        case 10...22:
+            return Clothes.hoodie
+        case 4.4...10:
+            return Clothes.jacket
+        case ...4.4:
+            return Clothes.jacketWarm
         default:
             return nil
         }

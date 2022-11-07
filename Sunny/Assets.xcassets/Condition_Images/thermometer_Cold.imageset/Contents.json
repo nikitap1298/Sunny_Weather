@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "thermometer_Cold.png",
+      "filename" : "thermometer.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "thermometer_Cold@2x.png",
+      "filename" : "thermometer@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "thermometer_Cold@3x.png",
+      "filename" : "thermometer@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

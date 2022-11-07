@@ -26,6 +26,8 @@ class SettingsVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        setUpSwipeGestureRecognizer()
+        
         customNavigationBar()
         setUpScrollView()
         
@@ -39,18 +41,24 @@ class SettingsVC: UIViewController {
         navigationController?.popViewControllerToLeft()
     }
     
+    @objc private func didSwipeLeft(_ recognizer: UISwipeGestureRecognizer) {
+        if recognizer.state == .ended {
+            navigationController?.popViewControllerToLeft()
+        }
+    }
+    
     @objc private func didTapTemperatureView() {
         if temperatureIsDefault == true {
-            firstBlock.temperature.swithViewLeadingAnchor?.isActive = false
-            firstBlock.temperature.swithViewTrailingAnhor?.isActive = true
+            firstBlock.temperature.switchViewLeadingAnchor?.isActive = false
+            firstBlock.temperature.switchViewTrailingAnhor?.isActive = true
             UIView.animate(withDuration: 0.3) { [weak self] in
                 self?.firstBlock.temperature.valuesView.layoutIfNeeded()
                 self?.temperatureIsDefault = false
                 UserDefaults.standard.set(self?.temperatureIsDefault, forKey: UserDefaultsKeys.temperature)
             }
         } else {
-            firstBlock.temperature.swithViewLeadingAnchor?.isActive = true
-            firstBlock.temperature.swithViewTrailingAnhor?.isActive = false
+            firstBlock.temperature.switchViewLeadingAnchor?.isActive = true
+            firstBlock.temperature.switchViewTrailingAnhor?.isActive = false
             UIView.animate(withDuration: 0.3) { [weak self] in
                 self?.firstBlock.temperature.valuesView.layoutIfNeeded()
                 self?.temperatureIsDefault = true
@@ -61,16 +69,16 @@ class SettingsVC: UIViewController {
     
     @objc private func didTapSpeedView() {
         if speedIsDefault == true {
-            firstBlock.speed.swithViewLeadingAnchor?.isActive = false
-            firstBlock.speed.swithViewTrailingAnhor?.isActive = true
+            firstBlock.speed.switchViewLeadingAnchor?.isActive = false
+            firstBlock.speed.switchViewTrailingAnhor?.isActive = true
             UIView.animate(withDuration: 0.3) { [weak self] in
                 self?.firstBlock.speed.valuesView.layoutIfNeeded()
                 self?.speedIsDefault = false
                 UserDefaults.standard.set(self?.speedIsDefault, forKey: UserDefaultsKeys.speed)
             }
         } else {
-            firstBlock.speed.swithViewLeadingAnchor?.isActive = true
-            firstBlock.speed.swithViewTrailingAnhor?.isActive = false
+            firstBlock.speed.switchViewLeadingAnchor?.isActive = true
+            firstBlock.speed.switchViewTrailingAnhor?.isActive = false
             UIView.animate(withDuration: 0.3) { [weak self] in
                 self?.firstBlock.speed.valuesView.layoutIfNeeded()
                 self?.speedIsDefault = true
@@ -81,16 +89,16 @@ class SettingsVC: UIViewController {
     
     @objc private func didTapPressureView() {
         if pressureIsDefault == true {
-            firstBlock.pressure.swithViewLeadingAnchor?.isActive = false
-            firstBlock.pressure.swithViewTrailingAnhor?.isActive = true
+            firstBlock.pressure.switchViewLeadingAnchor?.isActive = false
+            firstBlock.pressure.switchViewTrailingAnhor?.isActive = true
             UIView.animate(withDuration: 0.3) { [weak self] in
                 self?.firstBlock.pressure.valuesView.layoutIfNeeded()
                 self?.pressureIsDefault = false
                 UserDefaults.standard.set(self?.pressureIsDefault, forKey: UserDefaultsKeys.pressure)
             }
         } else {
-            firstBlock.pressure.swithViewLeadingAnchor?.isActive = true
-            firstBlock.pressure.swithViewTrailingAnhor?.isActive = false
+            firstBlock.pressure.switchViewLeadingAnchor?.isActive = true
+            firstBlock.pressure.switchViewTrailingAnhor?.isActive = false
             UIView.animate(withDuration: 0.3) { [weak self] in
                 self?.firstBlock.pressure.valuesView.layoutIfNeeded()
                 self?.pressureIsDefault = true
@@ -101,16 +109,16 @@ class SettingsVC: UIViewController {
     
     @objc private func didTapPrecipitationView() {
         if precipitationIsDefault == true {
-            firstBlock.precipitation.swithViewLeadingAnchor?.isActive = false
-            firstBlock.precipitation.swithViewTrailingAnhor?.isActive = true
+            firstBlock.precipitation.switchViewLeadingAnchor?.isActive = false
+            firstBlock.precipitation.switchViewTrailingAnhor?.isActive = true
             UIView.animate(withDuration: 0.3) { [weak self] in
                 self?.firstBlock.precipitation.valuesView.layoutIfNeeded()
                 self?.precipitationIsDefault = false
                 UserDefaults.standard.set(self?.precipitationIsDefault, forKey: UserDefaultsKeys.precipitation)
             }
         } else {
-            firstBlock.precipitation.swithViewLeadingAnchor?.isActive = true
-            firstBlock.precipitation.swithViewTrailingAnhor?.isActive = false
+            firstBlock.precipitation.switchViewLeadingAnchor?.isActive = true
+            firstBlock.precipitation.switchViewTrailingAnhor?.isActive = false
             UIView.animate(withDuration: 0.3) { [weak self] in
                 self?.firstBlock.precipitation.valuesView.layoutIfNeeded()
                 self?.precipitationIsDefault = true
@@ -121,16 +129,16 @@ class SettingsVC: UIViewController {
     
     @objc private func didTapDistanсeView() {
         if distanсeIsDefault == true {
-            firstBlock.distance.swithViewLeadingAnchor?.isActive = false
-            firstBlock.distance.swithViewTrailingAnhor?.isActive = true
+            firstBlock.distance.switchViewLeadingAnchor?.isActive = false
+            firstBlock.distance.switchViewTrailingAnhor?.isActive = true
             UIView.animate(withDuration: 0.3) { [weak self] in
                 self?.firstBlock.distance.valuesView.layoutIfNeeded()
                 self?.distanсeIsDefault = false
                 UserDefaults.standard.set(self?.distanсeIsDefault, forKey: UserDefaultsKeys.distance)
             }
         } else {
-            firstBlock.distance.swithViewLeadingAnchor?.isActive = true
-            firstBlock.distance.swithViewTrailingAnhor?.isActive = false
+            firstBlock.distance.switchViewLeadingAnchor?.isActive = true
+            firstBlock.distance.switchViewTrailingAnhor?.isActive = false
             UIView.animate(withDuration: 0.3) { [weak self] in
                 self?.firstBlock.distance.valuesView.layoutIfNeeded()
                 self?.distanсeIsDefault = true
@@ -141,16 +149,16 @@ class SettingsVC: UIViewController {
     
     @objc private func didTapTimeFormatView() {
         if timeFormatIsDefault == true {
-            firstBlock.timeFormat.swithViewLeadingAnchor?.isActive = false
-            firstBlock.timeFormat.swithViewTrailingAnhor?.isActive = true
+            firstBlock.timeFormat.switchViewLeadingAnchor?.isActive = false
+            firstBlock.timeFormat.switchViewTrailingAnhor?.isActive = true
             UIView.animate(withDuration: 0.3) { [weak self] in
                 self?.firstBlock.timeFormat.valuesView.layoutIfNeeded()
                 self?.timeFormatIsDefault = false
                 UserDefaults.standard.set(self?.timeFormatIsDefault, forKey: UserDefaultsKeys.timeFormat)
             }
         } else {
-            firstBlock.timeFormat.swithViewLeadingAnchor?.isActive = true
-            firstBlock.timeFormat.swithViewTrailingAnhor?.isActive = false
+            firstBlock.timeFormat.switchViewLeadingAnchor?.isActive = true
+            firstBlock.timeFormat.switchViewTrailingAnhor?.isActive = false
             UIView.animate(withDuration: 0.3) { [weak self] in
                 self?.firstBlock.timeFormat.valuesView.layoutIfNeeded()
                 self?.timeFormatIsDefault = true
@@ -182,12 +190,20 @@ class SettingsVC: UIViewController {
     }
     
     // MARK: - Private Functions
+    
+    private func setUpSwipeGestureRecognizer() {
+        let swipeGestureRecognizer = UISwipeGestureRecognizer()
+        swipeGestureRecognizer.addTarget(self, action: #selector(didSwipeLeft(_ :)))
+        swipeGestureRecognizer.direction = .left
+        mainScrollView.contentView.addGestureRecognizer(swipeGestureRecognizer)
+    }
+    
     private func setUpScrollView() {
-        view.backgroundColor = UIColor(named: CustomColors.colorVanilla)
+        view.backgroundColor = SettingsColors.backgroungWhite
         
         view.addSubview(mainScrollView.scrollView)
         
-        mainScrollView.contentViewHeightAnchor?.constant = 650
+        mainScrollView.contentViewHeightAnchor?.constant = 683
         
         NSLayoutConstraint.activate([
             mainScrollView.scrollView.topAnchor.constraint(equalTo: view.topAnchor),
@@ -210,7 +226,7 @@ class SettingsVC: UIViewController {
             secondBlock.mainView.topAnchor.constraint(equalTo: firstBlock.mainView.bottomAnchor, constant: 100),
             secondBlock.mainView.leadingAnchor.constraint(equalTo: mainScrollView.contentView.leadingAnchor, constant: 0),
             secondBlock.mainView.trailingAnchor.constraint(equalTo: mainScrollView.contentView.trailingAnchor, constant: 0),
-            secondBlock.mainView.heightAnchor.constraint(equalToConstant: 205)
+            secondBlock.mainView.heightAnchor.constraint(equalToConstant: 256)
         ])
         
         setUpButtons()
@@ -234,68 +250,62 @@ class SettingsVC: UIViewController {
     private func setUpUserDefaults() {
         let temperatureUserDef = UserDefaults.standard.value(forKey: UserDefaultsKeys.temperature) as? Bool
         temperatureIsDefault = temperatureUserDef ?? true
-        switch temperatureIsDefault {
-        case true:
-            firstBlock.temperature.swithViewLeadingAnchor?.isActive = true
-            firstBlock.temperature.swithViewTrailingAnhor?.isActive = false
-        default:
-            firstBlock.temperature.swithViewLeadingAnchor?.isActive = false
-            firstBlock.temperature.swithViewTrailingAnhor?.isActive = true
+        if temperatureIsDefault {
+            firstBlock.temperature.switchViewLeadingAnchor?.isActive = true
+            firstBlock.temperature.switchViewTrailingAnhor?.isActive = false
+        } else {
+            firstBlock.temperature.switchViewLeadingAnchor?.isActive = false
+            firstBlock.temperature.switchViewTrailingAnhor?.isActive = true
         }
         
         let speedUserDef = UserDefaults.standard.value(forKey: UserDefaultsKeys.speed) as? Bool
         speedIsDefault = speedUserDef ?? true
-        switch speedIsDefault {
-        case true:
-            firstBlock.speed.swithViewLeadingAnchor?.isActive = true
-            firstBlock.speed.swithViewTrailingAnhor?.isActive = false
-        default:
-            firstBlock.speed.swithViewLeadingAnchor?.isActive = false
-            firstBlock.speed.swithViewTrailingAnhor?.isActive = true
+        if speedIsDefault {
+            firstBlock.speed.switchViewLeadingAnchor?.isActive = true
+            firstBlock.speed.switchViewTrailingAnhor?.isActive = false
+        } else {
+            firstBlock.speed.switchViewLeadingAnchor?.isActive = false
+            firstBlock.speed.switchViewTrailingAnhor?.isActive = true
         }
         
         let pressureUserDef = UserDefaults.standard.value(forKey: UserDefaultsKeys.pressure) as? Bool
         pressureIsDefault = pressureUserDef ?? true
-        switch pressureIsDefault {
-        case true:
-            firstBlock.pressure.swithViewLeadingAnchor?.isActive = true
-            firstBlock.pressure.swithViewTrailingAnhor?.isActive = false
-        default:
-            firstBlock.pressure.swithViewLeadingAnchor?.isActive = false
-            firstBlock.pressure.swithViewTrailingAnhor?.isActive = true
+        if pressureIsDefault {
+            firstBlock.pressure.switchViewLeadingAnchor?.isActive = true
+            firstBlock.pressure.switchViewTrailingAnhor?.isActive = false
+        } else {
+            firstBlock.pressure.switchViewLeadingAnchor?.isActive = false
+            firstBlock.pressure.switchViewTrailingAnhor?.isActive = true
         }
         
         let precipitationUserDef = UserDefaults.standard.value(forKey: UserDefaultsKeys.precipitation) as? Bool
         precipitationIsDefault = precipitationUserDef ?? true
-        switch precipitationIsDefault {
-        case true:
-            firstBlock.precipitation.swithViewLeadingAnchor?.isActive = true
-            firstBlock.precipitation.swithViewTrailingAnhor?.isActive = false
-        default:
-            firstBlock.precipitation.swithViewLeadingAnchor?.isActive = false
-            firstBlock.precipitation.swithViewTrailingAnhor?.isActive = true
+        if precipitationIsDefault {
+            firstBlock.precipitation.switchViewLeadingAnchor?.isActive = true
+            firstBlock.precipitation.switchViewTrailingAnhor?.isActive = false
+        } else {
+            firstBlock.precipitation.switchViewLeadingAnchor?.isActive = false
+            firstBlock.precipitation.switchViewTrailingAnhor?.isActive = true
         }
         
         let distanceUserDef = UserDefaults.standard.value(forKey: UserDefaultsKeys.distance) as? Bool
         distanсeIsDefault = distanceUserDef ?? true
-        switch distanсeIsDefault {
-        case true:
-            firstBlock.distance.swithViewLeadingAnchor?.isActive = true
-            firstBlock.distance.swithViewTrailingAnhor?.isActive = false
-        default:
-            firstBlock.distance.swithViewLeadingAnchor?.isActive = false
-            firstBlock.distance.swithViewTrailingAnhor?.isActive = true
+        if distanсeIsDefault {
+            firstBlock.distance.switchViewLeadingAnchor?.isActive = true
+            firstBlock.distance.switchViewTrailingAnhor?.isActive = false
+        } else {
+            firstBlock.distance.switchViewLeadingAnchor?.isActive = false
+            firstBlock.distance.switchViewTrailingAnhor?.isActive = true
         }
         
         let timeFormatUserDef = UserDefaults.standard.value(forKey: UserDefaultsKeys.timeFormat) as? Bool
         timeFormatIsDefault = timeFormatUserDef ?? true
-        switch timeFormatIsDefault {
-        case true:
-            firstBlock.timeFormat.swithViewLeadingAnchor?.isActive = true
-            firstBlock.timeFormat.swithViewTrailingAnhor?.isActive = false
-        default:
-            firstBlock.timeFormat.swithViewLeadingAnchor?.isActive = false
-            firstBlock.timeFormat.swithViewTrailingAnhor?.isActive = true
+        if timeFormatIsDefault {
+            firstBlock.timeFormat.switchViewLeadingAnchor?.isActive = true
+            firstBlock.timeFormat.switchViewTrailingAnhor?.isActive = false
+        } else {
+            firstBlock.timeFormat.switchViewLeadingAnchor?.isActive = false
+            firstBlock.timeFormat.switchViewTrailingAnhor?.isActive = true
         }
     }
     
@@ -306,10 +316,10 @@ private extension SettingsVC {
     func customNavigationBar() {
         let appearance = UINavigationBarAppearance()
         appearance.configureWithOpaqueBackground()
-        appearance.backgroundColor = UIColor(named: CustomColors.colorVanilla)
+        appearance.backgroundColor = SettingsColors.backgroungWhite
         navigationItem.title = "Settings"
         appearance.titleTextAttributes = [
-            .foregroundColor: UIColor(named: CustomColors.colorGray) as Any,
+            .foregroundColor: OtherUIColors.navigationItems as Any,
             .font: UIFont(name: CustomFonts.nunitoBold, size: 26) ?? UIFont.systemFont(ofSize: 26)
         ]
         
@@ -321,8 +331,8 @@ private extension SettingsVC {
         
         // Custom Right Button
         let backButton = UIButton()
-        backButton.customNavigationButton(UIImage(named: CustomImages.backRight),
-                                          UIColor(named: CustomColors.colorGray))
+        backButton.customNavigationButton(UIImages.backRight,
+                                          OtherUIColors.navigationItems)
         let rightButton = UIBarButtonItem(customView: backButton)
         navigationItem.rightBarButtonItem = rightButton
         backButton.addTarget(self, action: #selector(didTapBackButton), for: .touchUpInside)

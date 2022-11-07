@@ -104,17 +104,17 @@ class CustomTemperatureCollectionCell: UICollectionViewCell {
         timeLabel.translateMask()
         temperatureLabel.translateMask()
         
-        mainView.backgroundColor = UIColor(named: CustomColors.colorBlue)
+        mainView.backgroundColor = CustomColors.colorBlue
         mainView.addCornerRadius()
         
         conditionImage.contentMode = .scaleAspectFill
         
         timeLabel.textAlignment = .left
-        timeLabel.textColor = UIColor(named: CustomColors.colorLightGray)
+        timeLabel.textColor = CustomColors.colorLightGray
         timeLabel.font = UIFont(name: CustomFonts.loraMedium, size: 12)
         
         temperatureLabel.textAlignment = .left
-        temperatureLabel.textColor = UIColor(named: CustomColors.colorVanilla)
+        temperatureLabel.textColor = CustomColors.colorVanilla
         temperatureLabel.font = UIFont(name: CustomFonts.loraSemiBold, size: 16)
         
         NSLayoutConstraint.activate([

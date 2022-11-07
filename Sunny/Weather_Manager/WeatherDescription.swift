@@ -92,7 +92,7 @@ struct WeatherDescription {
         case "TropicalStorm":
             return "Tropical Storm"
         default:
-            return ""
+            return "Condition"
         }
     }
 }

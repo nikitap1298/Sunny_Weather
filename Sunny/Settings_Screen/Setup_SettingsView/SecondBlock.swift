@@ -32,7 +32,7 @@ class SecondBlock: UIView {
     private func setUpUI() {
         self.addSubview(mainView)
         mainView.addSubview(appearance)
-//        mainView.addSubview(subscribe)
+        mainView.addSubview(subscribe)
         mainView.addSubview(about)
         mainView.addSubview(rateUS)
         mainView.addSubview(contactUS)
@@ -40,27 +40,27 @@ class SecondBlock: UIView {
         self.translateMask()
         mainView.translateMask()
         appearance.translateMask()
-//        subscribe.translateMask()
+        subscribe.translateMask()
         about.translateMask()
         rateUS.translateMask()
         contactUS.translateMask()
         
-        mainView.backgroundColor = UIColor(named: CustomColors.colorGray)
+        mainView.backgroundColor = SettingsColors.blockAndText
         
         appearance.titleLabel.text = "Appearance"
-        appearance.imageView.image = UIImage(named: CustomImages.iphone)
+        appearance.imageView.image = UIImages.iphone
         
         subscribe.titleLabel.text = "Subscribe"
-        subscribe.imageView.image = UIImage(named: CustomImages.buy)
+        subscribe.imageView.image = UIImages.buy
         
         about.titleLabel.text = "About"
-        about.imageView.image = UIImage(named: CustomImages.info)
+        about.imageView.image = UIImages.info
         
         rateUS.titleLabel.text = "Rate Us"
-        rateUS.imageView.image = UIImage(named: CustomImages.like)
+        rateUS.imageView.image = UIImages.like
         
         contactUS.titleLabel.text = "Contact Us"
-        contactUS.imageView.image = UIImage(named: CustomImages.mail_3)
+        contactUS.imageView.image = UIImages.mail_3
         
         NSLayoutConstraint.activate([
             mainView.topAnchor.constraint(equalTo: self.topAnchor),
@@ -73,22 +73,22 @@ class SecondBlock: UIView {
             appearance.buttonView.trailingAnchor.constraint(equalTo: mainView.trailingAnchor),
             appearance.buttonView.heightAnchor.constraint(equalToConstant: buttonHeight),
             
-//            subscribe.buttonView.topAnchor.constraint(equalTo: appearance.bottomAnchor, constant: 1),
-//            subscribe.buttonView.leadingAnchor.constraint(equalTo: mainView.leadingAnchor),
-//            subscribe.buttonView.trailingAnchor.constraint(equalTo: mainView.trailingAnchor),
-//            subscribe.buttonView.heightAnchor.constraint(equalToConstant: buttonHeight),
+            subscribe.buttonView.topAnchor.constraint(equalTo: appearance.bottomAnchor, constant: 1),
+            subscribe.buttonView.leadingAnchor.constraint(equalTo: mainView.leadingAnchor),
+            subscribe.buttonView.trailingAnchor.constraint(equalTo: mainView.trailingAnchor),
+            subscribe.buttonView.heightAnchor.constraint(equalToConstant: buttonHeight),
             
-            about.buttonView.topAnchor.constraint(equalTo: appearance.bottomAnchor, constant: 1),
+            about.buttonView.topAnchor.constraint(equalTo: subscribe.bottomAnchor, constant: 1),
             about.buttonView.leadingAnchor.constraint(equalTo: mainView.leadingAnchor),
             about.buttonView.trailingAnchor.constraint(equalTo: mainView.trailingAnchor),
             about.buttonView.heightAnchor.constraint(equalToConstant: buttonHeight),
             
-            rateUS.buttonView.topAnchor.constraint(equalTo: about.buttonView.bottomAnchor, constant: 1),
+            rateUS.buttonView.topAnchor.constraint(equalTo: about.bottomAnchor, constant: 1),
             rateUS.buttonView.leadingAnchor.constraint(equalTo: mainView.leadingAnchor),
             rateUS.buttonView.trailingAnchor.constraint(equalTo: mainView.trailingAnchor),
             rateUS.buttonView.heightAnchor.constraint(equalToConstant: buttonHeight),
             
-            contactUS.buttonView.topAnchor.constraint(equalTo: rateUS.buttonView.bottomAnchor, constant: 1),
+            contactUS.buttonView.topAnchor.constraint(equalTo: rateUS.bottomAnchor, constant: 1),
             contactUS.buttonView.leadingAnchor.constraint(equalTo: mainView.leadingAnchor),
             contactUS.buttonView.trailingAnchor.constraint(equalTo: mainView.trailingAnchor),
             contactUS.buttonView.heightAnchor.constraint(equalToConstant: buttonHeight)

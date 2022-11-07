@@ -35,14 +35,14 @@ class TextView: UIView {
         
         // SearchTextField
         searchTextField.attributedPlaceholder = NSAttributedString(
-            string: "Search for a city",
-            attributes: [NSAttributedString.Key.foregroundColor: UIColor(named: CustomColors.colorGray) ?? UIColor.systemGray,
+            string: "Search for a place",
+            attributes: [NSAttributedString.Key.foregroundColor: CustomColors.colorGray ?? UIColor.systemGray,
                          NSAttributedString.Key.font: UIFont(name: CustomFonts.loraMedium, size: 17) ?? UIFont.systemFont(ofSize: 17)
                         ]
         )
         searchTextField.textAlignment = .left
-        searchTextField.textColor = UIColor(named: CustomColors.colorGray)
-        searchTextField.backgroundColor = UIColor(named: CustomColors.colorVanilla)
+        searchTextField.textColor = CustomColors.colorGray
+        searchTextField.backgroundColor = CustomColors.colorVanilla
         searchTextField.addCornerRadius()
         
         // PlaceHolder Image
@@ -50,13 +50,13 @@ class TextView: UIView {
         searchTextField.leftView = leftVeiwView
         searchTextField.leftViewMode = .always
         let iconImage = UIImageView(frame: CGRect(x: 10, y:10, width: 22, height: 20))
-        iconImage.tintColor = UIColor(named: CustomColors.colorGray)
-        iconImage.image = UIImage(systemName: SFSymbols.search)
+        iconImage.tintColor = CustomColors.colorGray
+        iconImage.image = SFSymbols.search
         leftVeiwView.addSubview(iconImage)
         
         // Cancel Button
         cancelButton.setTitle("Cancel", for: .normal)
-        cancelButton.setTitleColor(UIColor(named: CustomColors.colorGray), for: .normal)
+        cancelButton.setTitleColor(CustomColors.colorGray, for: .normal)
         cancelButton.titleLabel?.font = UIFont(name: CustomFonts.loraMedium, size: 17)
         
         NSLayoutConstraint.activate([

@@ -11,7 +11,6 @@ class NoInternetVC: UIViewController {
     
     // MARK: - Private Properties
     private let customIntentetView = CustomIntentetView()
-    private let gradientModel = GradientModel()
     
     // MARK: - Life Cycle
     override func viewDidLoad() {
@@ -54,13 +53,6 @@ class NoInternetVC: UIViewController {
     }
     
     private func setUpGradient() {
-        let startPoint = CGPoint(x: 0, y: 0)
-        let endPoint = CGPoint(x: 0.8, y: 1)
-        
-        gradientModel.getGradient(view,
-                                  UIColor(named: UIColors.backgroundTop),
-                                  UIColor(named: UIColors.backgroundBottom),
-                                  startPoint,
-                                  endPoint)
+        view.addGradient(OnboardingColors.backgroundTop, OnboardingColors.backgroundBottom)
     }
 }

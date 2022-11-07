@@ -15,10 +15,10 @@ class CustomFirstBlockButtons: UIView {
     let valuesView = UIView()
     let leftValueLabel = UILabel()
     let rightValueLabel = UILabel()
-    let swithView = UIView()
+    let switchView = UIView()
     
-    var swithViewLeadingAnchor: NSLayoutConstraint?
-    var swithViewTrailingAnhor: NSLayoutConstraint?
+    var switchViewLeadingAnchor: NSLayoutConstraint?
+    var switchViewTrailingAnhor: NSLayoutConstraint?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -36,34 +36,34 @@ class CustomFirstBlockButtons: UIView {
         settingsView.addSubview(valuesView)
         valuesView.addSubview(leftValueLabel)
         valuesView.addSubview(rightValueLabel)
-        valuesView.addSubview(swithView)
+        valuesView.addSubview(switchView)
         
         settingsView.translateMask()
         settingsLabel.translateMask()
         valuesView.translateMask()
         leftValueLabel.translateMask()
         rightValueLabel.translateMask()
-        swithView.translateMask()
+        switchView.translateMask()
         
-        settingsView.backgroundColor = UIColor(named: CustomColors.colorVanilla)
+        settingsView.backgroundColor = SettingsColors.backgroungWhite
         
         settingsLabel.textAlignment = .left
-        settingsLabel.textColor = UIColor(named: CustomColors.colorGray)
+        settingsLabel.textColor = SettingsColors.blockAndText
         settingsLabel.font = UIFont(name: CustomFonts.loraMedium, size: 20)
         
-        valuesView.backgroundColor = UIColor(named: CustomColors.colorLightGray)
+        valuesView.backgroundColor = SettingsColors.valueBackground
         valuesView.layer.cornerRadius = 10
         
         leftValueLabel.textAlignment = .center
-        leftValueLabel.textColor = UIColor(named: CustomColors.colorGray)
+        leftValueLabel.textColor = SettingsColors.blockAndText
         leftValueLabel.font = UIFont(name: CustomFonts.loraMedium, size: 17)
         
         rightValueLabel.textAlignment = .center
-        rightValueLabel.textColor = UIColor(named: CustomColors.colorGray)
+        rightValueLabel.textColor = SettingsColors.blockAndText
         rightValueLabel.font = UIFont(name: CustomFonts.loraMedium, size: 17)
         
-        swithView.layer.cornerRadius = 10
-        swithView.backgroundColor = UIColor(named: CustomColors.colorBlue1)?.withAlphaComponent(0.35)
+        switchView.layer.cornerRadius = 10
+        switchView.backgroundColor = SettingsColors.switchBackground?.withAlphaComponent(0.35)
         
         NSLayoutConstraint.activate([
             settingsView.topAnchor.constraint(equalTo: self.topAnchor, constant: 0),
@@ -91,21 +91,21 @@ class CustomFirstBlockButtons: UIView {
             rightValueLabel.bottomAnchor.constraint(equalTo: valuesView.bottomAnchor),
             rightValueLabel.widthAnchor.constraint(equalToConstant: 66),
             
-            swithView.topAnchor.constraint(equalTo: valuesView.topAnchor),
-            swithView.bottomAnchor.constraint(equalTo: valuesView.bottomAnchor),
-            swithView.widthAnchor.constraint(equalToConstant: 66)
+            switchView.topAnchor.constraint(equalTo: valuesView.topAnchor),
+            switchView.bottomAnchor.constraint(equalTo: valuesView.bottomAnchor),
+            switchView.widthAnchor.constraint(equalToConstant: 66)
         ])
         
-        swithViewLeadingAnchor = swithView.leadingAnchor.constraint(equalTo: valuesView.leadingAnchor)
-        swithViewTrailingAnhor = swithView.trailingAnchor.constraint(equalTo: valuesView.trailingAnchor)
+        switchViewLeadingAnchor = switchView.leadingAnchor.constraint(equalTo: valuesView.leadingAnchor)
+        switchViewTrailingAnhor = switchView.trailingAnchor.constraint(equalTo: valuesView.trailingAnchor)
         
-        guard let swithViewLeadingAnchor = swithViewLeadingAnchor,
-              let swithViewTrailingAnhor = swithViewTrailingAnhor else {
+        guard let switchViewLeadingAnchor = switchViewLeadingAnchor,
+              let switchViewTrailingAnhor = switchViewTrailingAnhor else {
             return
         }
         
-        swithViewLeadingAnchor.isActive = true
-        swithViewTrailingAnhor.isActive = false
+        switchViewLeadingAnchor.isActive = true
+        switchViewTrailingAnhor.isActive = false
     }
 }
 
@@ -136,13 +136,13 @@ class CustomSecondBlockButtons: UIView {
         titleLabel.translateMask()
         imageView.translateMask()
         
-        buttonView.backgroundColor = UIColor(named: CustomColors.colorVanilla)
+        buttonView.backgroundColor = SettingsColors.backgroungWhite
         
         titleLabel.textAlignment = .left
-        titleLabel.textColor = UIColor(named: CustomColors.colorGray)
+        titleLabel.textColor = SettingsColors.blockAndText
         titleLabel.font = UIFont(name: CustomFonts.loraMedium, size: 20)
         
-        imageView.tintColor = UIColor(named: CustomColors.colorGray)
+        imageView.tintColor = SettingsColors.blockAndText
         imageView.contentMode = .scaleAspectFit
         
         NSLayoutConstraint.activate([

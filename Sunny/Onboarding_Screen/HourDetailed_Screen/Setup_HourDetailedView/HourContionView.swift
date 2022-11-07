@@ -27,7 +27,7 @@ class HourConditionView: UIView {
         collectionView.translateMask()
         
         collectionView.backgroundColor = .clear
-        collectionView.isScrollEnabled = true
+        collectionView.isScrollEnabled = false
         
         NSLayoutConstraint.activate([
             collectionView.topAnchor.constraint(equalTo: self.topAnchor, constant: 0),
@@ -48,9 +48,9 @@ class HourConditionView: UIView {
             let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalHeight(1.0))
             let item = NSCollectionLayoutItem(layoutSize: itemSize)
             
-            item.contentInsets = .init(top: 0, leading: 5, bottom: 15, trailing: 5)
+            item.contentInsets = .init(top: 0, leading: 7.5, bottom: 15, trailing: 7.5)
             
-            let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .absolute(self.collectionView.frame.height / 2))
+            let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .absolute(self.collectionView.frame.height / 4))
             let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitem: item, count: 2)
             group.contentInsets = .init(top: 0, leading: 0, bottom: 0, trailing: 0)
             
@@ -67,6 +67,7 @@ class DetailedConditionCell: UICollectionViewCell {
     
     let stackView = UIStackView()
     let parameterNameLabel = UILabel()
+    let parameterImageView = UIImageView()
     let parameterValueLabel = UILabel()
     
     override init(frame: CGRect) {
@@ -81,11 +82,16 @@ class DetailedConditionCell: UICollectionViewCell {
     
     override func prepareForReuse() {
         parameterNameLabel.text = nil
+        parameterImageView.image = nil
         parameterValueLabel.text = nil
     }
     
     func setUpParameterName(_ name: String) {
         parameterNameLabel.text = name
+    }
+    
+    func setUpParameterImage(_ image: UIImage?) {
+        parameterImageView.image = image
     }
     
     func setUpParameterValue(_ value: String) {
@@ -97,9 +103,10 @@ class DetailedConditionCell: UICollectionViewCell {
         
         stackView.translateMask()
        
-        stackView.backgroundColor = UIColor(named: CustomColors.colorDarkBlue)
+        stackView.backgroundColor = CustomColors.colorDarkBlue
         stackView.axis = .vertical
         stackView.distribution = .fillEqually
+        stackView.spacing = 18
         stackView.addCornerRadius()
         
         NSLayoutConstraint.activate([
@@ -114,17 +121,22 @@ class DetailedConditionCell: UICollectionViewCell {
     
     private func addLabelsToStackView() {
         parameterNameLabel.translateMask()
+        parameterImageView.translateMask()
         parameterValueLabel.translateMask()
         
         parameterNameLabel.textAlignment = .center
-        parameterNameLabel.textColor = UIColor(named: CustomColors.colorLightGray)
+        parameterNameLabel.textColor = CustomColors.colorLightGray
         parameterNameLabel.font = UIFont(name: CustomFonts.loraMedium, size: 18)
         
+        parameterImageView.contentMode = .scaleAspectFit
+        parameterImageView.clipsToBounds = true
+        
         parameterValueLabel.textAlignment = .center
-        parameterValueLabel.textColor = UIColor(named: CustomColors.colorVanilla)
-        parameterValueLabel.font = UIFont(name: CustomFonts.loraSemiBold, size: 18)
+        parameterValueLabel.textColor = CustomColors.colorVanilla
+        parameterValueLabel.font = UIFont(name: CustomFonts.loraSemiBold, size: 20)
         
         stackView.addArrangedSubview(parameterNameLabel)
+        stackView.addArrangedSubview(parameterImageView)
         stackView.addArrangedSubview(parameterValueLabel)
     }
     

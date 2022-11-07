@@ -12,7 +12,7 @@ class AboutVC: UIViewController {
     // MARK: - Private Properties
     private var sunImage: UIImageView = {
         let sunImage = UIImageView()
-        sunImage.image = UIImage(named: WeatherImages.sun)
+        sunImage.image = WeatherImages.sun
         sunImage.translateMask()
         return sunImage
     }()
@@ -22,14 +22,14 @@ class AboutVC: UIViewController {
         nameLabel.text = "Sunny"
         nameLabel.textAlignment = .center
         nameLabel.font = UIFont(name: CustomFonts.nunitoSemiBold, size: 40)
-        nameLabel.textColor = UIColor(named: CustomColors.colorDarkYellow)
+        nameLabel.textColor = CustomColors.colorDarkYellow
         nameLabel.translateMask()
         return nameLabel
     }()
     
     private var viewForButtons: UIView = {
         let viewForButtons = UIView()
-        viewForButtons.backgroundColor = UIColor(named: CustomColors.colorGray)
+        viewForButtons.backgroundColor = CustomColors.colorGray
         viewForButtons.translateMask()
         return viewForButtons
     }()
@@ -42,8 +42,9 @@ class AboutVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.backgroundColor = UIColor(named: CustomColors.colorVanilla)
+        view.backgroundColor = SettingsColors.backgroungWhite
         
+        setUpSwipeGestureRecognizer()
         customNavigationBar()
         setUpSunImage()
         setUpNameLabel()
@@ -63,6 +64,12 @@ class AboutVC: UIViewController {
         navigationController?.popToRootViewControllerToBottom()
     }
     
+    @objc private func didSwipeRight(_ recognizer: UISwipeGestureRecognizer) {
+        if recognizer.state == .ended {
+            navigationController?.popViewControllerToRight()
+        }
+    }
+    
     @objc private func didTapDeveloperButton() {
         if let url = URL(string: "https://github.com/nikitap1298") {
             UIApplication.shared.open(url)
@@ -76,6 +83,13 @@ class AboutVC: UIViewController {
     }
     
     // MARK: - Private Functions
+    private func setUpSwipeGestureRecognizer() {
+        let swipeGestureRecognizer = UISwipeGestureRecognizer()
+        swipeGestureRecognizer.addTarget(self, action: #selector(didSwipeRight(_ :)))
+        swipeGestureRecognizer.direction = .right
+        view.addGestureRecognizer(swipeGestureRecognizer)
+    }
+    
     private func setUpSunImage() {
         view.addSubview(sunImage)
         
@@ -122,12 +136,31 @@ class AboutVC: UIViewController {
         viewForButtons.addSubview(developerButton.buttonView)
         
         developerButton.titleLabel.text = "Developer:"
-        if UIDevice.modelName == "Simulator iPod touch (7th generation)" || UIDevice.modelName == "iPod touch (7th generation)" {
+        switch UIDevice.modelName {
+        case "Simulator iPod touch (7th generation)",
+            "iPod touch (7th generation)",
+            "Simulator iPhone 6s",
+            "iPhone 6s",
+            "Simulator iPhone 7",
+            "iPhone 7",
+            "Simulator iPhone 8",
+            "iPhone 8",
+            "Simulator iPhone SE",
+            "iPhone SE",
+            "Simulator iPhone SE (2nd generation)",
+            "iPhone SE (2nd generation)",
+            "Simulator iPhone SE (3rd generation)",
+            "iPhone SE (3rd generation)",
+            "Simulator iPhone 12 mini",
+            "iPhone 12 mini",
+            "Simulator iPhone 13 mini",
+            "iPhone 13 mini":
             developerButton.textLabel.text = "Nikita P."
-        } else {
+        default:
             developerButton.textLabel.text = "Nikita Pishchugin"
         }
-        developerButton.imageView.image = UIImage(named: CustomImages.link)
+        
+        developerButton.imageView.image = UIImages.link
         
         NSLayoutConstraint.activate([
             developerButton.buttonView.topAnchor.constraint(equalTo: viewForButtons.topAnchor, constant: 0),
@@ -144,7 +177,7 @@ class AboutVC: UIViewController {
         
         iconsButton.titleLabel.text = "Illustrations:"
         iconsButton.textLabel.text = "flaticon"
-        iconsButton.imageView.image = UIImage(named: CustomImages.certificate)
+        iconsButton.imageView.image = UIImages.certificate
         
         NSLayoutConstraint.activate([
             iconsButton.buttonView.topAnchor.constraint(equalTo: developerButton.buttonView.bottomAnchor, constant: 1),
@@ -161,7 +194,7 @@ class AboutVC: UIViewController {
         
         versionView.titleLabel.text = "Version:"
         versionView.textLabel.text = UIApplication.appVersion
-        versionView.imageView.image = UIImage(named: CustomImages.build)
+        versionView.imageView.image = UIImages.build
         
         NSLayoutConstraint.activate([
             versionView.buttonView.topAnchor.constraint(equalTo: iconsButton.buttonView.bottomAnchor, constant: 1),
@@ -181,7 +214,7 @@ private extension AboutVC {
         appearance.backgroundColor = .clear
         navigationItem.title = "About"
         appearance.titleTextAttributes = [
-            .foregroundColor: UIColor(named: CustomColors.colorGray) as Any,
+            .foregroundColor: OtherUIColors.navigationItems as Any,
             .font: UIFont(name: CustomFonts.nunitoBold, size: 26) ?? UIFont.systemFont(ofSize: 26)
         ]
         
@@ -193,16 +226,16 @@ private extension AboutVC {
         
         // Custom left button
         let backButton = UIButton()
-        backButton.customNavigationButton(UIImage(named: CustomImages.backLeft),
-                                          UIColor(named: CustomColors.colorGray))
+        backButton.customNavigationButton(UIImages.backLeft,
+                                          OtherUIColors.navigationItems)
         let leftButton = UIBarButtonItem(customView: backButton)
         navigationItem.leftBarButtonItem = leftButton
         backButton.addTarget(self, action: #selector(didTapBackButton), for: .touchUpInside)
         
         // Custom right button
         let homeButton = UIButton()
-        homeButton.customNavigationButton(UIImage(named: CustomImages.success),
-                                          UIColor(named: CustomColors.colorGray))
+        homeButton.customNavigationButton(UIImages.success,
+                                          OtherUIColors.navigationItems)
         let rightButton = UIBarButtonItem(customView: homeButton)
         navigationItem.rightBarButtonItem = rightButton
         homeButton.addTarget(self, action: #selector(didTapHomeButton), for: .touchUpInside)

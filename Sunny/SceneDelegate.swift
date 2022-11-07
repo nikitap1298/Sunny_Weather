@@ -66,12 +66,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         isDark = dark ?? false
         isSystem = system ?? false
         
-        print(isLight)
-        print(isDark)
-        print(isSystem)
+//        print(isLight)
+//        print(isDark)
+//        print(isSystem)
         
         // Support only Light Mode
-        NotificationCenter.default.addObserver(forName: NSNotification.Name(NotificationWords.lightMode), object: nil, queue: .main) { [weak self] _ in
+        NotificationCenter.default.addObserver(forName: NotificationNames.lightMode, object: nil, queue: .main) { [weak self] _ in
             guard let self = self else { return }
             self.isLight = true
             self.isDark = false
@@ -79,9 +79,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             UserDefaults.standard.set(self.isLight, forKey: UserDefaultsKeys.lightKey)
             UserDefaults.standard.set(self.isDark, forKey: UserDefaultsKeys.darkKey)
             UserDefaults.standard.set(self.isDark, forKey: UserDefaultsKeys.systemKey)
+            
+//            self.window?.overrideUserInterfaceStyle = .light
+//            self.onboarding.loadView()
         }
         
-        NotificationCenter.default.addObserver(forName: NSNotification.Name(NotificationWords.darkMode), object: nil, queue: .main) { [weak self] _ in
+        NotificationCenter.default.addObserver(forName: NotificationNames.darkMode, object: nil, queue: .main) { [weak self] _ in
             guard let self = self else { return }
             self.isLight = false
             self.isDark = true
@@ -89,9 +92,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             UserDefaults.standard.set(self.isLight, forKey: UserDefaultsKeys.lightKey)
             UserDefaults.standard.set(self.isDark, forKey: UserDefaultsKeys.darkKey)
             UserDefaults.standard.set(self.isDark, forKey: UserDefaultsKeys.systemKey)
+            
+//            self.window?.overrideUserInterfaceStyle = .dark
+//            self.onboarding.loadView()
         }
         
-        NotificationCenter.default.addObserver(forName: NSNotification.Name(NotificationWords.systemMode), object: nil, queue: .main) { [weak self] _ in
+        NotificationCenter.default.addObserver(forName: NotificationNames.systemMode, object: nil, queue: .main) { [weak self] _ in
             guard let self = self else { return }
             self.isLight = false
             self.isDark = false
@@ -103,13 +109,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         
         if isLight == true {
-            print("light")
+//            print("light")
             window?.overrideUserInterfaceStyle = .light
         } else if isDark == true {
-            print("dark")
+//            print("dark")
             window?.overrideUserInterfaceStyle = .dark
         } else if isSystem == true {
-            print("system")
+//            print("system")
             window?.overrideUserInterfaceStyle = .unspecified
         }
     }

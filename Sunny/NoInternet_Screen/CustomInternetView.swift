@@ -51,22 +51,22 @@ class CustomIntentetView: UIView {
         
         imageView.image = UIImage(systemName: "wifi.slash")
         imageView.contentMode = .scaleAspectFit
-        imageView.tintColor = UIColor(named: CustomColors.colorGray)
+        imageView.tintColor = CustomColors.colorGray
         
         textLabelFirst.text = "Weather Unavailable"
         textLabelFirst.textAlignment = .center
-        textLabelFirst.textColor = UIColor(named: CustomColors.colorVanilla)
+        textLabelFirst.textColor = CustomColors.colorVanilla
         textLabelFirst.font = UIFont(name: CustomFonts.nunitoBold, size: 22)
         
         textLabelSecond.text = "The Sunny app isn't connected to the internet. To view weather, check your connection, then restart the app."
         textLabelSecond.textAlignment = .center
         textLabelSecond.numberOfLines = 3
         textLabelSecond.lineBreakMode = .byWordWrapping
-        textLabelSecond.textColor = UIColor(named: CustomColors.colorGray)
+        textLabelSecond.textColor = CustomColors.colorGray
         textLabelSecond.font = UIFont(name: CustomFonts.loraMedium, size: 15)
         
         goToDeviceSettingsButton.setTitle("Go to Settings", for: .normal)
-        goToDeviceSettingsButton.tintColor = UIColor(named: CustomColors.colorVanilla)
+        goToDeviceSettingsButton.tintColor = CustomColors.colorVanilla
         goToDeviceSettingsButton.titleLabel?.font = UIFont(name: CustomFonts.loraMedium, size: 15)
         
         stackView.addArrangedSubview(imageView)

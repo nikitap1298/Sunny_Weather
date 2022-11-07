@@ -35,17 +35,17 @@ class CustomAboutButtons: UIView {
         textLabel.translateMask()
         imageView.translateMask()
         
-        buttonView.backgroundColor = UIColor(named: CustomColors.colorVanilla)
+        buttonView.backgroundColor = SettingsColors.backgroungWhite
         
         titleLabel.textAlignment = .left
-        titleLabel.textColor = UIColor(named: CustomColors.colorGray)
+        titleLabel.textColor = SettingsColors.blockAndText
         titleLabel.font = UIFont(name: CustomFonts.loraMedium, size: 20)
         
         textLabel.textAlignment = .right
-        textLabel.textColor = UIColor(named: CustomColors.colorGray)
+        textLabel.textColor = SettingsColors.blockAndText
         textLabel.font = UIFont(name: CustomFonts.loraRegular, size: 20)
         
-        imageView.tintColor = UIColor(named: CustomColors.colorGray)
+        imageView.tintColor = SettingsColors.blockAndText
         imageView.contentMode = .scaleAspectFit
         
         NSLayoutConstraint.activate([

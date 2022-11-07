@@ -7,7 +7,7 @@
 
 import UIKit
 
-// MARK: - NextFiveDaysConditionView
+// MARK: - NextSevenDaysConditionView
 class NextSevenDaysConditionView: UIView {
     
     let collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
@@ -39,7 +39,7 @@ class NextSevenDaysConditionView: UIView {
         ])
         
         // Register new custom CollectionViewCell
-        collectionView.register(NextFiveDaysConditionCell.self, forCellWithReuseIdentifier: NextFiveDaysConditionCell.reuseIdentifier)
+        collectionView.register(NextSevenDaysConditionCell.self, forCellWithReuseIdentifier: NextSevenDaysConditionCell.reuseIdentifier)
         
         // Set new collectionView layout
         collectionView.setCollectionViewLayout(generateTomottowCollectionLayout(), animated: true)
@@ -63,10 +63,10 @@ class NextSevenDaysConditionView: UIView {
     }
 }
 
-// MARK: - NextFiveDaysConditionCell
-class NextFiveDaysConditionCell: UICollectionViewCell {
+// MARK: - NextSevenDaysConditionCell
+class NextSevenDaysConditionCell: UICollectionViewCell {
     
-    static let reuseIdentifier = String(describing: NextFiveDaysConditionCell.self)
+    static let reuseIdentifier = String(describing: NextSevenDaysConditionCell.self)
     
     let mainView = UIView()
     let dateLabel = PaddingLabel(withInsets: 0, 0, 15, 0)
@@ -115,16 +115,15 @@ class NextFiveDaysConditionCell: UICollectionViewCell {
         stackView.translateMask()
         conditionImage.translateMask()
         
-        mainView.backgroundColor = UIColor(named: CustomColors.colorDarkBlue)
+        mainView.backgroundColor = CustomColors.colorDarkBlue
         mainView.addCornerRadius()
 
         dateLabel.textAlignment = .left
-        dateLabel.textColor = UIColor(named: CustomColors.colorLightGray)
+        dateLabel.textColor = CustomColors.colorLightGray
         dateLabel.font = UIFont(name: CustomFonts.loraMedium, size: 16)
         
         stackView.axis = .horizontal
         stackView.distribution = .fillEqually
-//        stackView.spacing = 10
         
         conditionImage.contentMode = .scaleAspectFit
         
@@ -157,15 +156,14 @@ class NextFiveDaysConditionCell: UICollectionViewCell {
         temperatureMaxLabel.translateMask()
         
         temperatureMinLabel.textAlignment = .right
-        temperatureMinLabel.textColor = UIColor(named: CustomColors.colorLightGray)
+        temperatureMinLabel.textColor = CustomColors.colorLightGray
         temperatureMinLabel.font = UIFont(name: CustomFonts.loraSemiBold, size: 13)
         
         temperatureMaxLabel.textAlignment = .right
-        temperatureMaxLabel.textColor = UIColor(named: CustomColors.colorVanilla)
+        temperatureMaxLabel.textColor = CustomColors.colorVanilla
         temperatureMaxLabel.font = UIFont(name: CustomFonts.loraSemiBold, size: 16)
         
         stackView.addArrangedSubview(temperatureMaxLabel)
-//        stackView.addArrangedSubview(deviderLabel)
         stackView.addArrangedSubview(temperatureMinLabel)
     }
 }

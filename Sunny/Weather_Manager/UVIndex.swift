@@ -12,15 +12,15 @@ struct UVIndex {
     func icon(_ uv: Int) -> UIImage? {
         switch uv {
         case 0...2:
-            return UIImage(named: ConditionImages.uvGreen)
+            return ConditionImages.uvGreen
         case 3...5:
-            return UIImage(named: ConditionImages.uvYellow)
+            return ConditionImages.uvYellow
         case 6...7:
-            return UIImage(named: ConditionImages.uvOrange)
+            return ConditionImages.uvOrange
         case 8...:
-            return UIImage(named: ConditionImages.uvRed)
+            return ConditionImages.uvRed
         default:
-            return UIImage(named: ConditionImages.uvGreen)
+            return ConditionImages.uvGreen
         }
     }
 }
